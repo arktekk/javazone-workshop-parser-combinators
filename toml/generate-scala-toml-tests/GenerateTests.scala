@@ -32,41 +32,54 @@ object GenerateTests extends App {
     }
   }
 
-  val implemented = List("integer")
+  val implemented = List("integer", "bool")
 
   val cwd: Path       = Paths.get("").toAbsolutePath
   val projectDir      = cwd.getParent.getParent.toString
-  val tomlTestBaseDir = s"$projectDir/toml/toml-tests"
-  val scalaTestDir    = s"$projectDir/toml/toml-parser/src/test/scala"
+  val tomlBaseDir     = s"$projectDir/toml/"
+  val tomlTestBaseDir = s"$tomlBaseDir/toml-tests"
+  val scalaTestDir    = s"$tomlBaseDir/toml-parser/src/test/scala"
 
   // list all dirs in valid
   val validDirs            = listDirectories(s"$tomlTestBaseDir/valid/")
   val implementedValidDirs = validDirs.filter(d => implemented.contains(d.getName))
+  println(s"implementedValidDirs = ${implementedValidDirs}")
 
-  // list all dirs in invalid
-  val invalidDirs            = listDirectories(s"$tomlTestBaseDir/invalid/")
-  val implementedInvalidDirs = invalidDirs.filter(d => implemented.contains(d.getName))
-
-  implementedValidDirs.map { dir =>
+  implementedValidDirs.foreach { dir =>
     val files: List[File] = listFiles(dir.toString)
 
     // grupper json og toml-filer
     val groupedFiles: Map[String, List[File]] = files.groupBy(file => file.getName.split("\\.")(0))
 
-    val tests: List[TomlTest] = groupedFiles.map { case (name, files) =>
+    val tests: List[ValidTomlTest] = groupedFiles.map { case (name, files) =>
       val json: String = files.find(f => f.getName.endsWith(".json")).map(slurp).get.replaceAll("\n", "\n      |")
       val toml: String = files.find(f => f.getName.endsWith(".toml")).map(slurp).get.replaceAll("\n", "\n      |")
-      TomlTest(
-        parserName = "arktekk.jz2024.toml.toml",
-        name = name,
-        jsonContent = json,
-        tomlContent = toml
-      )
+      ValidTomlTest(name = name, parserName = "arktekk.jz2024.toml.toml", tomlContent = toml, jsonContent = json)
     }.toList
-    val testSuite = TomlTestSuite("integer", "arktekk.jz2024.generated.toml.valid", tests)
+    val testSuite = TomlTestSuite(dir.getName, "arktekk.jz2024.generated.toml.valid", tests)
 
     testSuite.writeFile(scalaTestDir)
   }
+
+  // list all dirs in invalid
+  val invalidDirs            = listDirectories(s"$tomlTestBaseDir/invalid/")
+  val implementedInvalidDirs = invalidDirs.filter(d => implemented.contains(d.getName))
+
+  implementedInvalidDirs.foreach { dir =>
+    val files: List[File] = listFiles(dir.toString)
+
+    val tests: List[InvalidTomlTest] = files.map { file =>
+      InvalidTomlTest(
+        name = file.getName.split("\\.")(0),
+        parserName = "arktekk.jz2024.toml.toml",
+        tomlContent = slurp(file).replaceAll("\n", "\n      |")
+      )
+    }
+    val testSuite = TomlTestSuite(dir.getName, "arktekk.jz2024.generated.toml.invalid", tests)
+
+    testSuite.writeFile(scalaTestDir)
+  }
+
 }
 
 case class TomlTestSuite(name: String, pack: String, tests: List[TomlTest]) {
@@ -112,18 +125,43 @@ case class TomlTestSuite(name: String, pack: String, tests: List[TomlTest]) {
     Files.write(
       Paths.get(filename),
       this.toFormattedClass.getBytes(StandardCharsets.UTF_8),
-      StandardOpenOption.CREATE_NEW
+      StandardOpenOption.CREATE,
+      StandardOpenOption.TRUNCATE_EXISTING
     )
   }
 }
 
-case class TomlTest(name: String, parserName: String, jsonContent: String, tomlContent: String) {
+trait TomlTest {
+  def toMunitTest: String
+}
+
+case class ValidTomlTest(
+    name: String,
+    parserName: String,
+    tomlContent: String,
+    jsonContent: String
+) extends TomlTest {
   def toMunitTest = {
     s"""test("$name") {
        !  val Right(result) = $parserName.parseAll(\"\"\"$tomlContent\"\"\".stripMargin): @unchecked
        !  val Right(expectedJson) = parseJson(\"\"\"$jsonContent\"\"\".stripMargin): @unchecked
        !
        !  assert(result.asJson === expectedJson)
+       !}
+       !""".stripMargin('!')
+  }
+}
+
+case class InvalidTomlTest(
+    name: String,
+    parserName: String,
+    tomlContent: String
+) extends TomlTest {
+  def toMunitTest = {
+    s"""test("$name") {
+       !  val result = $parserName.parseAll(\"\"\"$tomlContent\"\"\".stripMargin): @unchecked
+       !
+       !  assert(result.isLeft)
        !}
        !""".stripMargin('!')
   }

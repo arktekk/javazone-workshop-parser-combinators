@@ -132,5 +132,4 @@ class Integer extends AnyFunSuite {
     assert(result.asJson === expectedJson)
   }
 
-
 }
