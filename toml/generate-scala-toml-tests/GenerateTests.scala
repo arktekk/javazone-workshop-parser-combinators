@@ -159,7 +159,7 @@ case class InvalidTomlTest(
 ) extends TomlTest {
   def toMunitTest = {
     s"""test("$name") {
-       !  val result = $parserName.parseAll(\"\"\"$tomlContent\"\"\".stripMargin): @unchecked
+       !  val result = $parserName.parseAll(\"\"\"$tomlContent\"\"\".stripMargin)
        !
        !  assert(result.isLeft)
        !}
