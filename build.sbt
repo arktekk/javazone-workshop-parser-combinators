@@ -10,7 +10,7 @@ lazy val toml = (project in file("toml/toml-parser")).settings(
     "org.scalatest" %% "scalatest"          % "3.2.18" % Test,
     "com.geirsson"   % "scalafmt-core_2.12" % "1.5.1"  % Test
   )
-)
+).enablePlugins(TomlTestPlugin)
 
 lazy val root = (project in file("."))
   .aggregate(toml)
