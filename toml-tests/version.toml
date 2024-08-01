@@ -1,0 +1,7 @@
+# Update with:
+#     rm -r [this-dir]
+#     toml-test -copy [this-dir]
+src    = 'https://github.com/toml-lang/toml-test'
+tag    = 'dev'
+commit = ''
+date   = 0001-01-01
