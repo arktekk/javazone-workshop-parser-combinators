@@ -90,8 +90,9 @@ case class TomlTestSuite(name: String, pack: String, tests: List[TomlTest]) {
        !
        !import io.circe.syntax.EncoderOps
        !import io.circe.parser.parse as parseJson
+       !import org.scalatest.funsuite.AnyFunSuite
        !
-       !class ${name.capitalize} extends munit.FunSuite {
+       !class ${name.capitalize} extends AnyFunSuite {
        !${tests.map(_.toMunitTest).mkString("\n")}
        !}
        !""".stripMargin('!')
@@ -122,7 +123,7 @@ case class TomlTest(name: String, parserName: String, jsonContent: String, tomlC
        !  val Right(result) = $parserName.parseAll(\"\"\"$tomlContent\"\"\".stripMargin): @unchecked
        !  val Right(expectedJson) = parseJson(\"\"\"$jsonContent\"\"\".stripMargin): @unchecked
        !
-       !  assertEquals(result.asJson, expectedJson)
+       !  assert(result.asJson === expectedJson)
        !}
        !""".stripMargin('!')
   }
