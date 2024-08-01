@@ -2,7 +2,7 @@ name         := "parse-combinator-ws"
 version      := "1.0"
 scalaVersion := "3.4.1"
 
-lazy val toml = (project in file("toml-parser"))
+lazy val toml = (project in file("toml/toml-parser"))
 
 lazy val root = (project in file("."))
   .aggregate(toml)
