@@ -7,3 +7,16 @@ lazy val oppgaver = (project in file("oppgaver")).settings(
     "org.scalatest" %% "scalatest"  % "3.2.18" % Test
   )
 )
+
+lazy val queryparam = (project in file("queryparam")).configure(config)
+.settings(
+  libraryDependencies ++= {
+    val binVersion = scalaBinaryVersion.value
+    Seq(
+      "io.lemonlabs" %% "scala-uri" % "4.0.3" exclude("org.typelevel", s"cats-parse_${binVersion}")
+    )
+  },
+)
+
+lazy val root = (project in file("."))
+  .aggregate(oppgaver, queryparam)
