@@ -9,8 +9,7 @@ object TomlTestPlugin extends AutoPlugin {
 
   override def projectSettings: Seq[Setting[_]] = Seq(
     Test / sourceGenerators += Def.task {
-      val sourcedir = (Test / sourceManaged).value / "generated-toml"
-      println("""Gen gen gen""")
+      val sourcedir = (Test / sourceDirectory).value / "scala"
       GenerateTests.gen(baseDirectory.value, sourcedir)
     }.taskValue
   )
@@ -34,7 +33,7 @@ object TomlTestPlugin extends AutoPlugin {
     def gen(basedir: File, sourceDir: File): Seq[File] = {
       println("basedir: " + basedir)
       val tomlBaseDir     = basedir.getParentFile()
-      val tomlTestBaseDir = s"$tomlBaseDir/toml-tests"      
+      val tomlTestBaseDir = s"$tomlBaseDir/toml-tests"
 
       // list all dirs in valid
       val validDirs            = listDirectories(s"$tomlTestBaseDir/valid/")
@@ -86,16 +85,16 @@ object TomlTestPlugin extends AutoPlugin {
   case class TomlTestSuite(name: String, pack: String, tests: List[TomlTest]) {
     private def formatScalaCode(code: String): String = {
       val scalaConfig =
-      org.scalafmt.config.ScalafmtConfig
-        .fromHoconString("""version = "3.7.17"
+        org.scalafmt.config.ScalafmtConfig
+          .fromHoconString("""version = "3.7.17"
                            |runner.dialect = scala3
                            |
                            |align.preset = more
                            |maxColumn = 120
                            |""".stripMargin)
-        .get
+          .get
 
-    org.scalafmt.Scalafmt.format(code, scalaConfig).get    
+      org.scalafmt.Scalafmt.format(code, scalaConfig).get
     }
 
     def toFormattedClass = {
