@@ -37,7 +37,7 @@ object GenerateTests extends App {
   val cwd: Path       = Paths.get("").toAbsolutePath
   val projectDir      = cwd.getParent.getParent.toString
   val tomlTestBaseDir = s"$projectDir/toml/toml-tests"
-  val scalaTestDir    = s"$projectDir/src/test/scala"
+  val scalaTestDir    = s"$projectDir/toml/toml-parser/src/test/scala"
 
   // list all dirs in valid
   val validDirs            = listDirectories(s"$tomlTestBaseDir/valid/")
