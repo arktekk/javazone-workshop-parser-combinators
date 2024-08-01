@@ -2,8 +2,9 @@ package arktekk.jz2024.generated.toml.valid
 
 import io.circe.syntax.EncoderOps
 import io.circe.parser.parse as parseJson
+import org.scalatest.funsuite.AnyFunSuite
 
-class Integer extends munit.FunSuite {
+class Integer extends AnyFunSuite {
   test("float64-max") {
     val Right(result) =
       arktekk.jz2024.toml.toml.parseAll("""# Maximum and minimum safe float64 natural numbers. Mainly here for
@@ -17,7 +18,7 @@ class Integer extends munit.FunSuite {
       |}
       |""".stripMargin): @unchecked
 
-    assertEquals(result.asJson, expectedJson)
+    assert(result.asJson === expectedJson)
   }
 
   test("zero") {
@@ -53,7 +54,7 @@ class Integer extends munit.FunSuite {
       |}
       |""".stripMargin): @unchecked
 
-    assertEquals(result.asJson, expectedJson)
+    assert(result.asJson === expectedJson)
   }
 
   test("long") {
@@ -69,7 +70,7 @@ class Integer extends munit.FunSuite {
       |}
       |""".stripMargin): @unchecked
 
-    assertEquals(result.asJson, expectedJson)
+    assert(result.asJson === expectedJson)
   }
 
   test("literals") {
@@ -98,7 +99,7 @@ class Integer extends munit.FunSuite {
       |}
       |""".stripMargin): @unchecked
 
-    assertEquals(result.asJson, expectedJson)
+    assert(result.asJson === expectedJson)
   }
 
   test("integer") {
@@ -115,7 +116,7 @@ class Integer extends munit.FunSuite {
       |}
       |""".stripMargin): @unchecked
 
-    assertEquals(result.asJson, expectedJson)
+    assert(result.asJson === expectedJson)
   }
 
   test("underscore") {
@@ -128,7 +129,6 @@ class Integer extends munit.FunSuite {
       |}
       |""".stripMargin): @unchecked
 
-    assertEquals(result.asJson, expectedJson)
+    assert(result.asJson === expectedJson)
   }
-
 }
