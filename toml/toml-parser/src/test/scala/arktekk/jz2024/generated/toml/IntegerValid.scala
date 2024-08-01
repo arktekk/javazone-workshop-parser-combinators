@@ -1,10 +1,10 @@
-package arktekk.jz2024.generated.toml.valid
+package arktekk.jz2024.generated.toml
 
 import io.circe.syntax.EncoderOps
 import io.circe.parser.parse as parseJson
 import org.scalatest.funsuite.AnyFunSuite
 
-class Integer extends AnyFunSuite {
+class IntegerValid extends AnyFunSuite {
   test("float64-max") {
     val Right(result) =
       arktekk.jz2024.toml.toml.parseAll("""# Maximum and minimum safe float64 natural numbers. Mainly here for

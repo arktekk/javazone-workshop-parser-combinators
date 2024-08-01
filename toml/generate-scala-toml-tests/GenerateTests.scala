@@ -56,7 +56,7 @@ object GenerateTests extends App {
       val toml: String = files.find(f => f.getName.endsWith(".toml")).map(slurp).get.replaceAll("\n", "\n      |")
       ValidTomlTest(name = name, parserName = "arktekk.jz2024.toml.toml", tomlContent = toml, jsonContent = json)
     }.toList
-    val testSuite = TomlTestSuite(dir.getName, "arktekk.jz2024.generated.toml.valid", tests)
+    val testSuite = TomlTestSuite(dir.getName + "Valid", "arktekk.jz2024.generated.toml", tests)
 
     testSuite.writeFile(scalaTestDir)
   }
@@ -75,7 +75,7 @@ object GenerateTests extends App {
         tomlContent = slurp(file).replaceAll("\n", "\n      |")
       )
     }
-    val testSuite = TomlTestSuite(dir.getName, "arktekk.jz2024.generated.toml.invalid", tests)
+    val testSuite = TomlTestSuite(dir.getName + "Invalid", "arktekk.jz2024.generated.toml", tests)
 
     testSuite.writeFile(scalaTestDir)
   }

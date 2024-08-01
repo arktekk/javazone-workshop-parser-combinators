@@ -1,10 +1,10 @@
-package arktekk.jz2024.generated.toml.invalid
+package arktekk.jz2024.generated.toml
 
 import io.circe.syntax.EncoderOps
 import io.circe.parser.parse as parseJson
 import org.scalatest.funsuite.AnyFunSuite
 
-class Integer extends AnyFunSuite {
+class IntegerInvalid extends AnyFunSuite {
   test("us-after-oct") {
     val result = arktekk.jz2024.toml.toml.parseAll("""us-after-oct = 0o_1
       |""".stripMargin)

@@ -1,10 +1,10 @@
-package arktekk.jz2024.generated.toml.invalid
+package arktekk.jz2024.generated.toml
 
 import io.circe.syntax.EncoderOps
 import io.circe.parser.parse as parseJson
 import org.scalatest.funsuite.AnyFunSuite
 
-class Bool extends AnyFunSuite {
+class BoolInvalid extends AnyFunSuite {
   test("mixed-case-true") {
     val result = arktekk.jz2024.toml.toml.parseAll("""mixed-case-true         = trUe
       |""".stripMargin)

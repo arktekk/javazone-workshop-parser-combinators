@@ -1,10 +1,10 @@
-package arktekk.jz2024.generated.toml.valid
+package arktekk.jz2024.generated.toml
 
 import io.circe.syntax.EncoderOps
 import io.circe.parser.parse as parseJson
 import org.scalatest.funsuite.AnyFunSuite
 
-class Bool extends AnyFunSuite {
+class BoolValid extends AnyFunSuite {
   test("bool") {
     val Right(result) = arktekk.jz2024.toml.toml.parseAll("""t = true
       |f = false
