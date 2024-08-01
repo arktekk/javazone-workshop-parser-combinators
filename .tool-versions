@@ -1,0 +1,3 @@
+java temurin-21.0.1+12.0.LTS
+sbt 1.10.0
+scala-cli latest
