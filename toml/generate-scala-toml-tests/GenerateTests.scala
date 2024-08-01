@@ -6,9 +6,8 @@ import org.scalafmt.config.ScalafmtConfig
 
 import java.io.File
 import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Paths, StandardOpenOption}
+import java.nio.file.{Files, Path, Paths, StandardOpenOption}
 import scala.io.{BufferedSource, Source}
-import scala.sys.exit
 
 object GenerateTests extends App {
 
@@ -34,20 +33,22 @@ object GenerateTests extends App {
   }
 
   val implemented = List("integer")
-  // TODO ikke hardkode katalog
-  val baseDir = "/Users/eirikm/projects/fagdag/parser-combinator-jz2024"
-  val srcDir  = s"$baseDir/src/test/scala"
+
+  val cwd: Path       = Paths.get("").toAbsolutePath
+  val projectDir      = cwd.getParent.getParent.toString
+  val tomlTestBaseDir = s"$projectDir/toml/toml-tests"
+  val scalaTestDir    = s"$projectDir/src/test/scala"
 
   // list all dirs in valid
-  val validDirs            = listDirectories(s"$baseDir/tests/valid/")
+  val validDirs            = listDirectories(s"$tomlTestBaseDir/valid/")
   val implementedValidDirs = validDirs.filter(d => implemented.contains(d.getName))
 
   // list all dirs in invalid
-  val invalidDirs            = listDirectories(s"$baseDir/tests/invalid/")
+  val invalidDirs            = listDirectories(s"$tomlTestBaseDir/invalid/")
   val implementedInvalidDirs = invalidDirs.filter(d => implemented.contains(d.getName))
 
   implementedValidDirs.map { dir =>
-    val files: List[File] = listFiles("/Users/eirikm/projects/fagdag/parser-combinator-jz2024/tests/valid/integer/")
+    val files: List[File] = listFiles(dir.toString)
 
     // grupper json og toml-filer
     val groupedFiles: Map[String, List[File]] = files.groupBy(file => file.getName.split("\\.")(0))
@@ -64,7 +65,7 @@ object GenerateTests extends App {
     }.toList
     val testSuite = TomlTestSuite("integer", "arktekk.jz2024.generated.toml.valid", tests)
 
-    testSuite.writeFile(srcDir)
+    testSuite.writeFile(scalaTestDir)
   }
 }
 
