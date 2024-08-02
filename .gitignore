@@ -2,3 +2,5 @@ target/
 .idea/
 .bsp/
 .scala-build/
+.metals
+.vscode
