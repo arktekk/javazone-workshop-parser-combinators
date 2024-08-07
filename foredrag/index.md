@@ -33,15 +33,11 @@ ParseResult vil inneholde posisjonsdata for inputen, og eventuelle feil.
 # Hva er en parser?
 
 ```scala
-def parser[I, O]: A => ParseResult[I, O] = ???
+def parser[I, O]: I => ParseResult[I, O] = ???
 ```
 
 <!-- 
 Litt forenklet kan man se på det som en funksjon fra I til ParseResult[I, O].
-
-Enda mer forenklet og det vi kommer til å bruke i resten av presentasjonen og 
-oppgaveløsningen er at vi tar en input av String og produserer en resultat av 
-en type O.
 -->
 
 ---
@@ -53,13 +49,8 @@ def parser[O]: String => ParseResult[O] = ???
 ```
 
 <!-- 
-En parser er kode som transformerer noe input I til 
-noe av output av `ParseResult[O]`.
-
-Litt forenklet kan man se på det som en funksjon fra I til O.
-
 Enda mer forenklet og det vi kommer til å bruke i resten av presentasjonen og 
-oppgaveløsningen er at vi tar en input av String og produserer en resultat av 
+oppgaveløsningen er at vi tar en input av String og produserer et resultat av 
 en type O.
 -->
 
@@ -93,6 +84,67 @@ Det som vi kan gjøre med nå når vi har etablert hva en parser er, så kan vi 
 Det finnes flere mulige måter å gjøre det på.
 Her har vi pakket inn en funksjon inn i en case klasse, men vi kan også lage et interface eller det som i Scala blir kalt et trait.
 -->
+
+----
+# Parser combinators
+
+<!--
+Nå når vi har en liten forståelse av hva en parser er, så kan vi da se på hva parser combinators er.
+
+En parser combinator er en måte å sette sammen parsere av små biter som hver for seg gir mening.
+Vi kan se på dette som flere funksjoner som opererer videre på resultatet av forrige funksjonskall.
+
+-->
+La oss si at vi har de følgende parserene:
+
+* `val digit: Parser[Char] = ???`
+* `val alpha: Parser[Char] = ???`
+* `val alphaNum = alpha | digit`
+
+Da kan vi se at vi setter sammen digit og alpha for å lage en ny parser som gjør begge deler.
+Hver av disse kan testes for seg selv.
+
+---
+# Parser Combinators
+
+<!--
+Dersom vi feks titter inni ParseResult, så ser det noenlunde slik ut:
+
+-->
+
+## ParseResult
+
+```scala
+enum ParseResult[O] {
+    case Success(value: O, rest: Option[String], position: Position)
+    case Failure(message: String, position: Position)
+}
+```
+
+
+---
+# cats-parse
+
+```scala
+libraryDependencies += "org.typelevel" % "cats-parse" % "1.0.0"
+```
+
+`cats-parse` er substring orientert, så vi ser på biter av en streng, og henter ut informasjon fra den.
+Dette betyr at vi setter sammen parsere som matcher biter av strenger til vi når EOF.
+
+---
+# Eksempel på parsere
+
+```
+val digit = Parser.charIn("1234567890")
+
+val alpha = Parser.charIn(('a' to 'z') ++ ('A' to 'Z'))
+
+val alphanum: Parser[String] = (alpha | digit).rep.string
+
+val string = Parser.string("input")
+```
+
 
 ---
 ### En Scala primer
@@ -207,7 +259,7 @@ digit                = "0" | digit excluding zero ;
  
 # Backus–Naur form (BNF) Variants
 
-> Augmented Backus–Naur form (ABNF) and Routing Backus–Naur form (RBNF)[16] are extensions commonly used to describe Internet Engineering Task Force (IETF) protocols. 
+> Augmented Backus–Naur form (ABNF) and Routing Backus–Naur form (RBNF) are extensions commonly used to describe Internet Engineering Task Force (IETF) protocols.
 [wikipedia](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
 
 ```
