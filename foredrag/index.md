@@ -14,139 +14,6 @@ marp: true
 En parser som spiser parsere
 
 ---
-
-# Hva er en parser?
-
-```scala
-def parser[I, O](input: I): ParseResult[I, O] = ???
-```
-
-<!-- 
-En parser er kode som transformerer noe input I til 
-noe av output av `ParseResult[O]`.
-
-ParseResult vil inneholde posisjonsdata for inputen, og eventuelle feil.
--->
-
----
-
-# Hva er en parser?
-
-```scala
-def parser[I, O]: I => ParseResult[I, O] = ???
-```
-
-<!-- 
-Litt forenklet kan man se på det som en funksjon fra I til ParseResult[I, O].
--->
-
----
-
-# Hva er en parser?
-
-```scala
-def parser[O]: String => ParseResult[O] = ???
-```
-
-<!-- 
-Enda mer forenklet og det vi kommer til å bruke i resten av presentasjonen og 
-oppgaveløsningen er at vi tar en input av String og produserer et resultat av 
-en type O.
--->
-
-
----
-
-# Hva er en parser?
-
-```scala
-final case class Parser[O](run: String => ParseResult[O])
-```
-
-<!-- 
-Det som vi kan gjøre med nå når vi har etablert hva en parser er, så kan vi pakke den inn i en datatype.
-Det finnes flere mulige måter å gjøre det på.
-Her har vi pakket inn en funksjon inn i en case klasse, men vi kan også lage et interface eller det som i Scala blir kalt et trait.
--->
-
----
-
-# Hva er en parser?
-
-```scala
-trait Parser[O] {
-  def apply(input: String): ParseResult[O]
-}
-```
-
-<!-- 
-Det som vi kan gjøre med nå når vi har etablert hva en parser er, så kan vi pakke den inn i en datatype.
-Det finnes flere mulige måter å gjøre det på.
-Her har vi pakket inn en funksjon inn i en case klasse, men vi kan også lage et interface eller det som i Scala blir kalt et trait.
--->
-
-----
-# Parser combinators
-
-<!--
-Nå når vi har en liten forståelse av hva en parser er, så kan vi da se på hva parser combinators er.
-
-En parser combinator er en måte å sette sammen parsere av små biter som hver for seg gir mening.
-Vi kan se på dette som flere funksjoner som opererer videre på resultatet av forrige funksjonskall.
-
--->
-La oss si at vi har de følgende parserene:
-
-* `val digit: Parser[Char] = ???`
-* `val alpha: Parser[Char] = ???`
-* `val alphaNum = alpha | digit`
-
-Da kan vi se at vi setter sammen digit og alpha for å lage en ny parser som gjør begge deler.
-Hver av disse kan testes for seg selv.
-
----
-# Parser Combinators
-
-<!--
-Dersom vi feks titter inni ParseResult, så ser det noenlunde slik ut:
-
--->
-
-## ParseResult
-
-```scala
-enum ParseResult[O] {
-    case Success(value: O, rest: Option[String], position: Position)
-    case Failure(message: String, position: Position)
-}
-```
-
-
----
-# cats-parse
-
-```scala
-libraryDependencies += "org.typelevel" % "cats-parse" % "1.0.0"
-```
-
-`cats-parse` er substring orientert, så vi ser på biter av en streng, og henter ut informasjon fra den.
-Dette betyr at vi setter sammen parsere som matcher biter av strenger til vi når EOF.
-
----
-# Eksempel på parsere
-
-```
-val digit = Parser.charIn("1234567890")
-
-val alpha = Parser.charIn(('a' to 'z') ++ ('A' to 'Z'))
-
-val alphanum: Parser[String] = (alpha | digit).rep.string
-
-val string = Parser.string("input")
-```
-
-
----
 ### En Scala primer
 
 ```scala
@@ -226,6 +93,146 @@ def even(x: Int): EvenOdd = if isEven(x) then EvenOdd.Even(x) else EvenOdd.Odd(x
 
 ```
 
+---
+# Hva er en parser?
+> A parser is a software component that takes input data (typically text) and builds a data structure – often some kind of parse tree, abstract syntax tree or other hierarchical structure, giving a structural representation of the input while checking for correct syntax. 
+[wikipedia](https://en.wikipedia.org/wiki/Parsing#Parser)
+
+---
+
+# Hva er en parser?
+
+```scala
+def parser[I, O](input: I): ParseResult[I, O] = ???
+```
+
+<!-- 
+En parser er kode som transformerer noe input I til 
+noe av output av `ParseResult[I, O]`.
+
+ParseResult vil inneholde posisjonsdata for inputen, og eventuelle feil.
+-->
+
+---
+
+# Hva er en parser?
+
+```scala
+def parser[I, O]: I => ParseResult[I, O] = ???
+```
+
+<!-- 
+Litt forenklet kan man se på det som en funksjon fra I til ParseResult[I, O].
+-->
+
+---
+
+# Hva er en parser?
+
+```scala
+def parser[O]: String => ParseResult[O] = ???
+```
+
+<!-- 
+Enda mer forenklet og det vi kommer til å bruke i resten av presentasjonen og 
+oppgaveløsningen er at vi tar en input av String og produserer et resultat av 
+en type O.
+-->
+
+
+---
+
+# Hva er en parser?
+
+```scala
+final case class Parser[O](run: String => ParseResult[O])
+```
+
+<!-- 
+Det som vi kan gjøre med nå når vi har etablert hva en parser er, så kan vi pakke den inn i en datatype.
+Det finnes flere mulige måter å gjøre det på.
+Her har vi pakket inn en funksjon inn i en case klasse, men vi kan også lage et interface eller det som i Scala blir kalt et trait.
+-->
+
+---
+
+# Hva er en parser?
+
+```scala
+trait Parser[O] {
+  def apply(input: String): ParseResult[O]
+}
+```
+
+<!-- 
+Det som vi kan gjøre med nå når vi har etablert hva en parser er, så kan vi pakke den inn i en datatype.
+Det finnes flere mulige måter å gjøre det på.
+Her har vi pakket inn en funksjon inn i en case klasse, men vi kan også lage et interface eller det som i Scala blir kalt et trait.
+-->
+
+----
+# Parser combinators
+
+<!--
+Nå når vi har en liten forståelse av hva en parser er, så kan vi da se på hva parser combinators er.
+
+En parser combinator er en måte å sette sammen parsere av små biter som hver for seg gir mening.
+Vi kan se på dette som flere funksjoner som opererer videre på resultatet av forrige funksjonskall.
+
+-->
+La oss si at vi har de følgende parserene:
+
+* `val digit: Parser[Char] = ???`
+* `val alpha: Parser[Char] = ???`
+* `val alphaNum = alpha | digit` | leses som eller
+
+<!-- 
+Da kan vi se at vi setter sammen digit og alpha for å lage en ny parser som gjør begge deler.
+Hver av disse kan testes for seg selv.
+-->
+
+---
+
+---
+# Parser Combinators
+
+<!--
+Dersom vi feks titter inni ParseResult, så ser det noenlunde slik ut:
+
+-->
+
+## ParseResult
+
+```scala
+enum ParseResult[O] {
+    case Success(value: O, rest: Option[String], position: Position)
+    case Failure(message: String, position: Position)
+}
+```
+
+
+---
+# cats-parse
+
+```scala
+libraryDependencies += "org.typelevel" % "cats-parse" % "1.0.0"
+```
+
+`cats-parse` er substring orientert, så vi ser på biter av en streng, og henter ut informasjon fra den.
+Dette betyr at vi setter sammen parsere som matcher biter av strenger til vi når EOF.
+
+---
+# Eksempel på parsere
+
+```
+val digit = Parser.charIn("1234567890")
+
+val alpha = Parser.charIn(('a' to 'z') ++ ('A' to 'Z'))
+
+val alphanum: Parser[String] = (alpha | digit).rep.string
+
+val string = Parser.string("input")
+```
 
 ---
 
@@ -269,3 +276,17 @@ rule = definition ; comment CR LF
 <!-- Vi kommer til å se på dette litt nærmere når vi skal se på oppgaveløsning. 
 For de som er kjent med RFCer så er dette brukt i stort sett alle.
 --->
+
+---
+
+# ABNF eksempel - JSON Pointer 
+[RFC6901](https://www.rfc-editor.org/rfc/rfc6901)
+
+```
+      json-pointer    = *( "/" reference-token )
+      reference-token = *( unescaped / escaped )
+      unescaped       = %x00-2E / %x30-7D / %x7F-10FFFF
+         ; %x2F ('/') and %x7E ('~') are excluded from 'unescaped'
+      escaped         = "~" ( "0" / "1" )
+        ; representing '~' and '/', respectively
+```
