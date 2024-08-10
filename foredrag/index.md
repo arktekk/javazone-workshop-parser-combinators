@@ -17,15 +17,15 @@ En parser som spiser parsere
 ### En Scala primer
 
 ```scala
-//en verdi av typen Int
+// en verdi av typen Int
 val value: Int = 1
 val value = 1
 
-//En mutabel variabel av typen String
+// En mutabel variabel av typen String
 var x: String = "Hello"
 x = x + " World"
 
-//metodekall
+// metodekall
 println("na" * 10 + " Batman")
 // val res5: String = nananananananananana Batman
 
@@ -35,11 +35,11 @@ println("na" * 10 + " Batman")
 
 ```scala
 
-//Metode definisjon
+// Metode definisjon
 def sayHello(who: String): Unit = println(s"Hello $who")
 def sayHello(who: String) = println(s"Hello $who")
 
-//metode definisjon med generiske typer
+// metode definisjon med generiske typer
 def generic[A](input: A): Unit = println(s"called with ${input}")
 generic("World")
 generic(1)
@@ -78,7 +78,7 @@ println(newDogName)
 
 
 ---
-## Algebraiske data typer
+## Algebraiske datatyper
 
 
 ```scala
@@ -184,7 +184,7 @@ La oss si at vi har de følgende parserene:
 
 * `val digit: Parser[Char] = ???`
 * `val alpha: Parser[Char] = ???`
-* `val alphaNum = alpha | digit` | leses som eller
+* `val alphaNum: Parser[Char] = alpha | digit` leses som: alpha *eller* digit
 
 <!-- 
 Da kan vi se at vi setter sammen digit og alpha for å lage en ny parser som gjør begge deler.
