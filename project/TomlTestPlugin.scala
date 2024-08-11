@@ -28,7 +28,7 @@ object TomlTestPlugin extends AutoPlugin {
       else List.empty[File]
     }
 
-    val implemented = List("integer", "bool")
+    val implemented = List("integer", "bool", "datetime")
 
     def gen(basedir: File, sourceDir: File): Seq[File] = {
       println("basedir: " + basedir)

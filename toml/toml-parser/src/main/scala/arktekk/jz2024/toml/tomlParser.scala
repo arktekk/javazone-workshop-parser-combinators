@@ -66,7 +66,7 @@ val oct_prefix: P[Unit] = P.string("0o")
 val bin_prefix: P[Unit] = P.string("0b")
 
 // unsigned-dec-int = DIGIT / digit1-9 1*( DIGIT / underscore DIGIT )
-val unsigned_dec_int: P[String] = ((digit1_9 ~ (DIGIT | (underscore ~ DIGIT)).rep) | DIGIT).string
+val unsigned_dec_int: P[String] = ((digit1_9 ~ (DIGIT | (underscore ~ DIGIT)).rep0) | DIGIT).string
 
 // hex-int = hex-prefix HEXDIG *( HEXDIG / underscore HEXDIG )
 val hex_int: P[String] = hex_prefix *> (HEXDIG ~ (HEXDIG | (underscore ~ HEXDIG)).rep0).string
@@ -82,30 +82,22 @@ val bin_int: P[String] = bin_prefix *> (digit0_1 ~ (digit0_1 | (underscore ~ dig
 
 // dec-int = [ minus / plus ] unsigned-dec-int
 val dec_int: P[String] = ((minus | plus).?.with1 ~ unsigned_dec_int).string
-  .map(s => s.replaceAll("_", "").toLong.toString)
+  .map(s => s.replaceAll("_", "").replaceAll("\\+", ""))
 
 // integer = dec-int / hex-int / oct-int / bin-int
 val integer: P[TomlInteger] = (hex_int | oct_int | bin_int | dec_int)
-  .map(TomlInteger.apply)
+  .map { s =>
+    val i = s.toLong
+    if i == 0L then TomlInteger("0")
+    else TomlInteger(s)
+  }
 
-// ;; Float
-//
-// nan = %x6e.61.6e  ; nan
-// inf = %x69.6e.66  ; inf
-// special-float = [ minus / plus ] ( inf / nan )
-//
-// float-exp-part = [ minus / plus ] zero-prefixable-int
-// exp = "e" float-exp-part
-//
 // zero-prefixable-int = DIGIT *( DIGIT / underscore DIGIT )
-// decimal-point = %x2E               ; .
-// frac = decimal-point zero-prefixable-int
-// float-int-part = dec-int
-val float_int_part: P[TomlInteger] = P.defer(???)
+val zero_prefixable_int: P[(Char, Any)] = DIGIT ~ (DIGIT | (underscore *> DIGIT)).rep0
+
 //
-// float =/ special-float
-// float = float-int-part ( exp / frac [ exp ] )
-val float = float_int_part
+// decimal-point = %x2E               ; .
+val decimal_point: P[Unit] = P.char('.')
 
 // ;; Boolean
 // false   = %x66.61.6C.73.65  ; false
@@ -113,9 +105,114 @@ val float = float_int_part
 // boolean = true / false
 val boolean: P[TomlBoolean] = P.string("true").as(TomlBoolean("true")) | P.string("false").as(TomlBoolean("false"))
 
+// ;; Date and Time (as defined in RFC 3339)
+//
+//date-fullyear  = 4DIGIT
+val date_fullyear = DIGIT.rep(4, 4)
+
+//date-month     = 2DIGIT  ; 01-12
+val date_month = DIGIT.rep(2, 2).string.flatMap { s =>
+  val i = s.toInt
+  if i >= 1 && i <= 12 then P.pure(s)
+  else P.Fail
+}
+
+//date-mday      = 2DIGIT  ; 01-28, 01-29, 01-30, 01-31 based on month/year
+val date_mday = DIGIT.rep(2, 2).string.flatMap { s =>
+  val i = s.toInt
+  if i >= 1 && i <= 31 then P.pure(s)
+  else P.Fail
+}
+
+//time-delim     = "T" / %x20 ; T, t, or space
+val time_delim = P.ignoreCaseCharIn("T ")
+
+//time-hour      = 2DIGIT  ; 00-23
+val time_hour: P[String] = DIGIT.rep(2, 2).string.flatMap { s =>
+  val i = s.toInt
+
+  if i >= 0 && i <= 23 then P.pure(s)
+  else P.Fail
+}
+
+//time-minute    = 2DIGIT  ; 00-59
+val time_minute: P[String] = (P.charIn('0' to '5') ~ DIGIT).string.flatMap { s =>
+  val i = s.toInt
+
+  if (i >= 0 && i < 60) P.pure(s)
+  else P.fail
+}
+
+//time-second    = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap second rules
+val time_second: P[String] = DIGIT.rep(2, 2).string.flatMap { s =>
+  val i = s.toInt
+  if i >= 0 && i <= 59 then P.pure(s)
+  else P.Fail
+}
+
+//time-secfrac   = "." 1*DIGIT
+val time_secfrac: P[String] = P.char('.') *> DIGIT.rep.string.map(_.padTo(3, '0'))
+
+//time-numoffset = ( "+" / "-" ) time-hour ":" time-minute
+val time_numoffset: P[String] = (P.charIn("+-") ~ time_hour ~ P.char(':') ~ time_minute).string
+
+//time-offset    = "Z" / time-numoffset
+val time_offset: P[String] = P.ignoreCaseCharIn('Z').as("Z") | time_numoffset
+
+//
+//partial-time   = time-hour ":" time-minute ":" time-second [ time-secfrac ]
+val partial_time: P[String] =
+  ((time_hour <* P.char(':'))
+    ~ time_minute
+    ~ (P.char(':') *> (time_second ~ time_secfrac.?)).?)
+    .map { case ((hour, minute), maybeSec) =>
+      val seconds: String =
+        maybeSec match {
+          case Some((sec, Some(secFrac))) => sec + "." + secFrac
+          case Some((sec, None))          => sec
+          case None                       => "00"
+        }
+
+      hour + ":" + minute + ":" + seconds
+    }
+
+//full-date      = date-fullyear "-" date-month "-" date-mday
+val full_date = date_fullyear ~ P.char('-') ~ date_month ~ P.char('-') ~ date_mday
+
+//full-time      = partial-time time-offset
+val full_time: P[String] = (partial_time ~ time_offset).map { case (partial, offset) => partial + offset }
+
+//;; Offset Date-Time
+//
+//offset-date-time = full-date time-delim full-time
+val offset_date_time: P[TomlDateTime] = ((full_date.string <* time_delim) ~ full_time).map { case (date, time) =>
+  TomlDateTime(s"${date}T${time}")
+}
+//
+//;; Local Date-Time
+//
+//local-date-time = full-date time-delim partial-time
+val local_date_time: P[TomlDateTimeLocal] = ((full_date.string <* time_delim) ~ partial_time).map { case (date, time) =>
+  TomlDateTimeLocal(s"${date}T$time")
+}
+
+//;; Local Date
+//
+//local-date = full-date
+val local_date: P[TomlDateLocal] = full_date.string.map(TomlDateLocal.apply)
+//
+//;; Local Time
+//
+//local-time = partial-time
+val local_time: P[TomlTimeLocal] = partial_time.map(TomlTimeLocal.apply)
+
+//date-time      = offset-date-time / local-date-time / local-date / local-time
+val date_time =
+  offset_date_time.backtrack | local_date_time.backtrack | local_date.backtrack | local_time
+
 // ;; Key-Value pairs
 // val = string / boolean / array / inline-table / date-time / float / integer
-val value: P[TomlVal] = boolean | integer
+val value: P[TomlVal] = boolean | date_time.backtrack | integer
 
 // keyval-sep = ws %x3D ws ; =
 val keyval_sep: P[Unit] = (ws.with1 ~ P.char('=') ~ ws).void
