@@ -5,113 +5,8 @@ import io.circe.parser.parse as parseJson
 import org.scalatest.funsuite.AnyFunSuite
 
 class IntegerInvalid extends AnyFunSuite {
-  test("leading-zero-sign-1") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-sign-1 = -01
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("leading-zero-3") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-3 = 0_0
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("incomplete-hex") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""incomplete-hex = 0x
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("negative-bin") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""negative-bin = -0b11010110
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
   test("us-after-oct") {
     val result = arktekk.jz2024.toml.toml.parseAll("""us-after-oct = 0o_1
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("double-sign-nex") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""double-sign-nex = --99
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("double-sign-plus") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""double-sign-plus = ++99
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("invalid-hex-2") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""invalid-hex-2 = 0xgabba00f1
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("leading-us-bin") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-us-bin = _0b1
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("trailing-us-bin") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""trailing-us-bin = 0b1_
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("leading-zero-sign-3") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-sign-3 = +0_1
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("positive-bin") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""positive-bin = +0b11010110
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("capital-hex") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""capital-hex = 0X1
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("incomplete-oct") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""incomplete-oct = 0o
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("text-after-integer") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""answer = 42 the ultimate answer?
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("negative-hex") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""negative-hex = -0xff
       |""".stripMargin)
 
     assert(result.isLeft)
@@ -124,8 +19,29 @@ class IntegerInvalid extends AnyFunSuite {
     assert(result.isLeft)
   }
 
-  test("leading-us") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-us = _123
+  test("trailing-us") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""trailing-us = 123_
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("incomplete-oct") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""incomplete-oct = 0o
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("negative-oct") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""negative-oct = -0o755
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("double-sign-plus") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""double-sign-plus = ++99
       |""".stripMargin)
 
     assert(result.isLeft)
@@ -138,22 +54,29 @@ class IntegerInvalid extends AnyFunSuite {
     assert(result.isLeft)
   }
 
-  test("leading-zero-sign-2") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-sign-2 = +01
+  test("leading-us-bin") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-us-bin = _0b1
       |""".stripMargin)
 
     assert(result.isLeft)
   }
 
-  test("positive-hex") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""positive-hex = +0xff
+  test("trailing-us-oct") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""trailing-us-oct = 0o1_
       |""".stripMargin)
 
     assert(result.isLeft)
   }
 
-  test("leading-zero-2") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-2 = 00
+  test("invalid-hex-1") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""invalid-hex-1 = 0xaafz
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("positive-bin") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""positive-bin = +0b11010110
       |""".stripMargin)
 
     assert(result.isLeft)
@@ -166,6 +89,55 @@ class IntegerInvalid extends AnyFunSuite {
     assert(result.isLeft)
   }
 
+  test("leading-zero-3") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-3 = 0_0
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("invalid-hex") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""invalid-hex = 0xaafz
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("leading-us") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-us = _123
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("positive-hex") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""positive-hex = +0xff
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("leading-us-hex") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-us-hex = _0x1
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("leading-zero-2") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-2 = 00
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("leading-zero-sign-1") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-sign-1 = -01
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
   test("leading-zero-1") {
     val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-1 = 01
       |""".stripMargin)
@@ -173,15 +145,36 @@ class IntegerInvalid extends AnyFunSuite {
     assert(result.isLeft)
   }
 
-  test("leading-us-oct") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-us-oct = _0o1
+  test("text-after-integer") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""answer = 42 the ultimate answer?
       |""".stripMargin)
 
     assert(result.isLeft)
   }
 
-  test("trailing-us-oct") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""trailing-us-oct = 0o1_
+  test("leading-zero-sign-2") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-sign-2 = +01
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("trailing-us-bin") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""trailing-us-bin = 0b1_
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("positive-oct") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""positive-oct = +0o755
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("leading-us-oct") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-us-oct = _0o1
       |""".stripMargin)
 
     assert(result.isLeft)
@@ -201,27 +194,6 @@ class IntegerInvalid extends AnyFunSuite {
     assert(result.isLeft)
   }
 
-  test("capital-bin") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""capital-bin = 0B0
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("invalid-hex-1") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""invalid-hex-1 = 0xaafz
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
-  test("positive-oct") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""positive-oct = +0o755
-      |""".stripMargin)
-
-    assert(result.isLeft)
-  }
-
   test("us-after-bin") {
     val result = arktekk.jz2024.toml.toml.parseAll("""us-after-bin = 0b_1
       |""".stripMargin)
@@ -229,15 +201,29 @@ class IntegerInvalid extends AnyFunSuite {
     assert(result.isLeft)
   }
 
-  test("trailing-us") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""trailing-us = 123_
+  test("negative-bin") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""negative-bin = -0b11010110
       |""".stripMargin)
 
     assert(result.isLeft)
   }
 
-  test("invalid-hex") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""invalid-hex = 0xaafz
+  test("leading-zero-sign-3") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""leading-zero-sign-3 = +0_1
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("capital-hex") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""capital-hex = 0X1
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("invalid-hex-2") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""invalid-hex-2 = 0xgabba00f1
       |""".stripMargin)
 
     assert(result.isLeft)
@@ -250,15 +236,29 @@ class IntegerInvalid extends AnyFunSuite {
     assert(result.isLeft)
   }
 
-  test("negative-oct") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""negative-oct = -0o755
+  test("double-sign-nex") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""double-sign-nex = --99
       |""".stripMargin)
 
     assert(result.isLeft)
   }
 
-  test("leading-us-hex") {
-    val result = arktekk.jz2024.toml.toml.parseAll("""leading-us-hex = _0x1
+  test("capital-bin") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""capital-bin = 0B0
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("negative-hex") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""negative-hex = -0xff
+      |""".stripMargin)
+
+    assert(result.isLeft)
+  }
+
+  test("incomplete-hex") {
+    val result = arktekk.jz2024.toml.toml.parseAll("""incomplete-hex = 0x
       |""".stripMargin)
 
     assert(result.isLeft)
