@@ -16,18 +16,19 @@ object PointerParser {
   val digit            = Parser.charIn('0' to '9')
   val numericIndex     = (digitWithOutZero ~ digit.rep0).string.map(x => Ref.Index(x.toInt))
 
-  val sep       = Parser.char('/')
+  val sep       = Parser.char('/').withContext("separator")
   val emptyProp = sep.as(Ref.Property(""))
 
-  val index: Parser[Ref & ArrayRef] = zero | endOfList | numericIndex
+  val index: Parser[Ref & ArrayRef] = (zero | endOfList | numericIndex).withContext("numeric")
   val property: Parser[Ref] =
-    (unescaped | escaped).rep.string.map(Ref.Property(_)) | emptyProp
+    (unescaped | escaped).rep.string.map(Ref.Property(_)).withContext("property")
 
   val root = Parser.end.as(Path.Root)
 
-  val refs = (emptyProp ~ (index | property).repSep0(sep.?) ~ emptyProp.?).map { case ((empty, list), maybeEnd) =>
-    if list.isEmpty then Path.Refs(NonEmptyList.of(empty))
-    else Path.Refs(NonEmptyList.fromListUnsafe(list ++ maybeEnd.toList))
+  val refs = (emptyProp ~ (index | property).repSep0(sep) ~ emptyProp.?).map { case ((empty, list), maybeEnd) =>
+    NonEmptyList.fromList(list ++ maybeEnd.toList) match
+      case Some(value) => Path.Refs(value)
+      case None        => Path.Refs(NonEmptyList.of(empty))
   }
 
   val parser: Parser0[Path] =

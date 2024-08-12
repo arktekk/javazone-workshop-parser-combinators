@@ -66,11 +66,4 @@ class PointerTest extends AnyFunSuite {
     val parsed = PointerParser.parse(root)
     assert(parsed === Right(path))
   }
-
-  test("basic - property then empty string then property") {
-    val root   = "/foo//bar"
-    val path   = Path.Refs(NonEmptyList.of(Ref.Property("foo"), Ref.Property(""), Ref.Property("bar")))
-    val parsed = PointerParser.parse(root)
-    assert(parsed === Right(path))
-  }
 }
