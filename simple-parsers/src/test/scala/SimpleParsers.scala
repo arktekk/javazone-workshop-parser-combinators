@@ -1,22 +1,7 @@
-import cats.data.NonEmptyList
 import cats.parse.{Parser, Rfc5234}
 import org.scalatest.funsuite.AnyFunSuite
 
-class SimpleParsers extends AnyFunSuite {
-
-  inline def assertParsesValid[A](parser: Parser[A], inputs: String*) = {
-    inputs.foreach { input =>
-      val result = parser.parseAll(input)
-      assert(result.isRight)
-    }
-  }
-
-  inline def assertParsesInvalid[A](parser: Parser[A], inputs: String*) = {
-    inputs.foreach { input =>
-      val result = parser.parseAll(input)
-      assert(result.isLeft)
-    }
-  }
+class SimpleParsers extends ParserSuite {
 
   test("parse \"a\"") {
     val input = "a"
@@ -87,5 +72,23 @@ class SimpleParsers extends AnyFunSuite {
 
     assertParsesValid(p, validInput)
     assertParsesInvalid(p, invalidInputs*)
+  }
+
+  test("naturlige tall") {
+    val validInputs   = List("123", "234", "1", "0")
+    val invalidInputs = List("-1", "0xff", "a", "12c")
+
+    val p = Parser.charsWhile(_.isDigit)
+
+    assertParsesValid(p, validInputs*)
+    assertParsesInvalid(p, invalidInputs*)
+  }
+
+  test("DNA") {
+    val validInputs = List("ACGT", "AAA", "TT", "ATGG", "CCAATG")
+
+    val p = Parser.charIn("ACGT").rep
+
+    assertParsesValid(p, validInputs*)
   }
 }
