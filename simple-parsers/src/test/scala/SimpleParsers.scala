@@ -91,4 +91,15 @@ class SimpleParsers extends ParserSuite {
 
     assertParsesValid(p, validInputs*)
   }
+
+  test("boolean") {
+    val validInputs = List(
+      "true"  -> true,
+      "false" -> false
+    )
+
+    val p: Parser[Boolean] = Parser.string("true").as(true) | Parser.string("false").as(false)
+
+    assertParses(p, validInputs*)
+  }
 }
