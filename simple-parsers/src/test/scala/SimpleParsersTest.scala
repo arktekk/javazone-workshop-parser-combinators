@@ -1,5 +1,5 @@
 import cats.data.NonEmptyList
-import cats.parse.Parser
+import cats.parse.{Parser, Rfc5234}
 import org.scalatest.funsuite.AnyFunSuite
 
 class SimpleParsers extends AnyFunSuite {
@@ -25,6 +25,30 @@ class SimpleParsers extends AnyFunSuite {
     assertParsesValid(p, input)
   }
 
+  test("parse \"ab\"") {
+    val input = "ab"
+    val p     = Parser.char('a') ~ Parser.char('b')
+
+    assertParsesValid(p, input)
+  }
+
+  test("parse \"aba\"") {
+    val input = "aba"
+    val p     = Parser.char('a') ~ Parser.char('b') ~ Parser.char('a')
+
+    assertParsesValid(p, input)
+  }
+
+  test("parse '1*a b 1*a'") {
+    val validInputs   = List("aaba", "aba", "aaaabaaa")
+    val invalidInputs = List("baaa", "aabbaa")
+
+    val p = Parser.char('a').rep ~ Parser.char('b') ~ Parser.char('a').rep
+
+    assertParsesValid(p, validInputs*)
+    assertParsesInvalid(p, invalidInputs*)
+  }
+
   test("parse \"aa\" og \"aaa\", men ikke \"a\" eller \"aaaa\"") {
     val validInputs   = List("aa", "aaa")
     val invalidInputs = List("a", "aaaa")
@@ -34,30 +58,34 @@ class SimpleParsers extends AnyFunSuite {
     assertParsesInvalid(p, invalidInputs*)
   }
 
-  test("parse \"ab\"") {
-    val input = "ab"
-    val p     = Parser.char('a') ~ Parser.char('b')
+  test("parse \"(a, a)\" (minst to a'er)") {
+    val validInputs   = List("(a, a, a)", "(a, a)", "(a, a)")
+    val invalidInputs = List("()", "(a)", "(a, aa)", "(a,a)")
 
-    assertParsesValid(p, input)
-  }
-
-  test("parse abc i stigende rekkefølge") {
-    val validInputs   = List("abc", "bc", "c")
-    val invalidInputs = List("aba", "ba", "cb")
-
-    val p = (Parser.char('a').? ~ Parser.char('b').?).with1 ~ Parser.char('c')
+    val p =
+      Parser.char('(') ~
+        Parser.char('a').repSep(2, Parser.string(", ")) ~
+        Parser.char(')')
 
     assertParsesValid(p, validInputs*)
     assertParsesInvalid(p, invalidInputs*)
   }
 
-  test("parse abc i stigende eller lik rekkefølge") {
-    val validInputs                         = List("aaabc", "abc", "bccc", "abbbc", "bbbcc", "c")
-    val aParser: Parser[NonEmptyList[Unit]] = Parser.char('a').rep
-    val bParser                             = Parser.char('b')
+  test("parse \"a\" med vilkårlig mange spaces før og/eller etter") {
+    val validInputs = List("a", " a", "  a", " a  ")
 
-    val p = (Parser.char('a').rep0 ~ Parser.char('b').rep0).with1 ~ Parser.char('c').rep
+    val p = Parser.char('a').surroundedBy(Rfc5234.wsp.rep0)
 
     assertParsesValid(p, validInputs*)
+  }
+
+  test("Batman") {
+    val validInput    = "nananananananananana Batman"
+    val invalidInputs = List("nanana Batman", "nananananananananananananananananananana Batman")
+
+    val p = Parser.string("na").rep(10, 10) ~ Rfc5234.wsp ~ Parser.string("Batman")
+
+    assertParsesValid(p, validInput)
+    assertParsesInvalid(p, invalidInputs*)
   }
 }
