@@ -1,4 +1,4 @@
-package arktekk.jz2024.pointer
+package arktekk.oppgave2
 
 import cats.data.NonEmptyList
 import cats.parse.*

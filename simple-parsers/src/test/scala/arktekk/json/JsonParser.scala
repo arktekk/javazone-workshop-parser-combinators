@@ -32,12 +32,7 @@ class JsonParser extends ParserSuite {
       .string("false")
       .as(JsonBoolean(false)) | Parser.string("true").as(JsonBoolean(true))).withContext("boolean")
   val jsonNumber: Parser[JsonValue] =
-    cats.parse.Numbers.jsonNumber.mapFilter { s =>
-      Try {
-        println(JsonNumber(BigDecimal(s)))
-        JsonNumber(BigDecimal(s))
-      }.toOption
-    }
+    cats.parse.Numbers.jsonNumber.mapFilter(s => Try(JsonNumber(BigDecimal(s))).toOption)
 
   val jsonStringParser: Parser[String] = cats.parse.strings.Json.delimited.parser
 

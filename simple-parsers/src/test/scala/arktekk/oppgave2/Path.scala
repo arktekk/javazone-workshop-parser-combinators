@@ -1,4 +1,4 @@
-package arktekk.jz2024.pointer
+package arktekk.oppgave2
 
 import cats.data.NonEmptyList
 
@@ -14,5 +14,3 @@ enum Path {
   case Root
   case Refs(parts: NonEmptyList[Ref])
 }
-
-//final case class Path(refs: List[Ref])
