@@ -1,5 +1,5 @@
 import cats.data.NonEmptyList
-import cats.parse.{Parser, Rfc5234, StringCodec}
+import cats.parse.{Parser, Rfc5234}
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.Try
@@ -16,8 +16,13 @@ class JsonParser extends ParserSuite {
   }
   import JsonValue.*
 
-  val comma = Parser.char(',').surroundedBy(Rfc5234.wsp.rep0)
-  val colon = Parser.char(':').surroundedBy(Rfc5234.wsp.rep0)
+  val ows          = (Rfc5234.wsp | Rfc5234.crlf).rep0.void
+  val comma        = Parser.char(',').surroundedBy(ows).withContext("comma")
+  val colon        = Parser.char(':').surroundedBy(ows)
+  val openBracket  = Parser.char('[').surroundedBy(ows)
+  val closeBracket = Parser.char(']').surroundedBy(ows).withContext("closeBracket")
+  val openBrace    = Parser.char('{').surroundedBy(ows)
+  val closeBrace   = Parser.char('}').surroundedBy(ows).withContext("closeBrace")
 
   val jsonNull: Parser[JsonValue] = Parser.string("null").as(JsonNull).withContext("null")
   val jsonBoolean: Parser[JsonValue] =
@@ -25,7 +30,12 @@ class JsonParser extends ParserSuite {
       .string("false")
       .as(JsonBoolean(false)) | Parser.string("true").as(JsonBoolean(true))).withContext("boolean")
   val jsonNumber: Parser[JsonValue] =
-    cats.parse.Numbers.jsonNumber.mapFilter(s => Try(JsonNumber(BigDecimal(s))).toOption)
+    cats.parse.Numbers.jsonNumber.mapFilter { s =>
+      Try {
+        println(JsonNumber(BigDecimal(s)))
+        JsonNumber(BigDecimal(s))
+      }.toOption
+    }
 
   val jsonStringParser: Parser[String] = cats.parse.strings.Json.delimited.parser
 
@@ -34,24 +44,22 @@ class JsonParser extends ParserSuite {
   val jsonScalar: Parser[JsonValue] = jsonNull | jsonBoolean | jsonNumber | jsonString
 
   val jsonRecur: Parser[JsonValue] = Parser.defer {
-    val jsonValue = jsonRecur | jsonScalar
+    val jsonValue = (jsonRecur | jsonScalar).surroundedBy(ows)
     val jsonArray: Parser[JsonValue] = {
-      Parser.string("[]").as(JsonArray(List.empty)).backtrack |
+      (openBracket ~ closeBracket).as(JsonArray(List.empty)).backtrack |
         jsonValue
           .repSep(comma)
-          .between(Parser.char('['), Parser.char(']'))
+          .between(openBracket, closeBracket)
           .map(nel => JsonArray(nel.toList))
     }
 
-    val jsonObject: Parser[JsonValue] =
-      Parser.string("{}").as(JsonObject(List.empty)).backtrack |
+    val jsonObject: Parser[JsonValue] = {
+      (openBrace ~ closeBrace).as(JsonObject(List.empty)).backtrack |
         ((jsonStringParser <* colon) ~ jsonValue)
           .repSep(comma)
-          .between(
-            Parser.char('{'),
-            Parser.char('}')
-          )
+          .between(openBrace, closeBrace)
           .map((pairs: NonEmptyList[(String, JsonValue)]) => JsonObject(pairs.toList))
+    }
 
     jsonArray | jsonObject
   }
@@ -74,7 +82,7 @@ class JsonParser extends ParserSuite {
   test("jsonNumber") {
     val validInputs = List(
       "123"     -> JsonNumber(BigDecimal("123")),
-      "123.123" -> JsonNumber(BigDecimal("123.123"))
+      "123.123" -> JsonNumber(123.123)
     )
 
     assertParses(jsonValue, validInputs*)
@@ -90,8 +98,8 @@ class JsonParser extends ParserSuite {
 
   test("jsonArray") {
     val validInputs = List(
-      "[]"    -> JsonArray(List.empty),
-      "[1,2]" -> JsonArray(List(JsonNumber(BigDecimal(1)), JsonNumber(BigDecimal(2))))
+      " [  ] "    -> JsonArray(List.empty),
+      "[ 1, 20 ]" -> JsonArray(List(JsonNumber(1), JsonNumber(20)))
     )
 
     assertParses(jsonValue, validInputs*)
@@ -99,8 +107,14 @@ class JsonParser extends ParserSuite {
 
   test("jsonObject") {
     val validInputs = List(
-      "{}"             -> JsonObject(List.empty),
-      """{"test":1}""" -> JsonObject(List("test" -> JsonNumber(BigDecimal(1))))
+      "{ }"             -> JsonObject(List.empty),
+      """{"test": 1}""" -> JsonObject(List("test" -> JsonNumber(BigDecimal(1)))),
+      """{"foo": "bar","fizz":[1,2,3,"fizz"]}""" -> JsonObject(
+        List(
+          ("foo", JsonString("bar")),
+          ("fizz", JsonArray(List(JsonNumber(1), JsonNumber(2), JsonNumber(3), JsonString("fizz"))))
+        )
+      )
     )
 
     assertParses(jsonValue, validInputs*)
