@@ -41,6 +41,25 @@ bruke i dag, så trenger vi å gå litt gjennom basic Scala syntaks.
 -->
 
 ---
+### Agenda (før pausen)
+
+- litt om scala
+- litt om parser combinators
+- oppgaver
+
+---
+### Agenda (etter pausen)
+
+- json parser i plenum
+  - arbeidsflyt  
+  - backtrack
+  - withContext
+- oppgaver
+  - json-pointer
+  - toml
+  
+---
+
 ### En Scala primer
 
 ```scala 3
