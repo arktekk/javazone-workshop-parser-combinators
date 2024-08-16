@@ -1,6 +1,8 @@
+package arktekk.json
+
 import cats.data.NonEmptyList
 import cats.parse.{Parser, Rfc5234}
-import org.scalatest.funsuite.AnyFunSuite
+import arktekk.ParserSuite
 
 import scala.util.Try
 

@@ -1,5 +1,7 @@
+package arktekk.oppgave1
+
 import cats.parse.{Parser, Rfc5234}
-import org.scalatest.funsuite.AnyFunSuite
+import arktekk.ParserSuite
 
 class SimpleParsers extends ParserSuite {
 

@@ -1,5 +1,7 @@
+package arktekk.oppgave1
+
+import arktekk.ParserSuite
 import cats.parse.{Parser, Rfc5234}
-import org.scalatest.funsuite.AnyFunSuite
 
 class Backtracking extends ParserSuite {
 

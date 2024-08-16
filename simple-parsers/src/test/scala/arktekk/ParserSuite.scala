@@ -1,3 +1,5 @@
+package arktekk
+
 import cats.parse.{Parser, Rfc5234}
 import org.scalatest.funsuite.AnyFunSuite
 

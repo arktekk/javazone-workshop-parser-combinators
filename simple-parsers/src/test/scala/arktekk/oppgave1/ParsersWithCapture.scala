@@ -1,5 +1,7 @@
+package arktekk.oppgave1
+
 import cats.parse.{Parser, Rfc5234}
-import org.scalatest.funsuite.AnyFunSuite
+import arktekk.ParserSuite
 
 class ParsersWithCapture extends ParserSuite {
 
@@ -18,8 +20,8 @@ class ParsersWithCapture extends ParserSuite {
 
   test("character range") {
     val validInputs = List(
-      "abcde" -> "abcde",
-      "ABCDE" -> "ABCDE",
+      "abcde"  -> "abcde",
+      "ABCDE"  -> "ABCDE",
       "æøåÆØÅ" -> "æøåÆØÅ"
     )
 
