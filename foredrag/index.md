@@ -13,17 +13,40 @@ marp: true
 
 En parser som spiser parsere
 
+--- 
+# Motivasjon
+
+Hvorfor er vi her?
+
+<!--
+
+Hvor mange her har brukt regulære utrykk?
+
+Flere har brukt Regulære utrykk for å hente ut data fra 
+strenger. Det vi skal se på i denne workshoppen er et alternativ til dette.
+En vits som ofte fortelles i forbindelse med regulære utrykk er:
+
+Jeg hadde et problem som jeg valgte å løse med regulære utrykk, nå har jeg to problemer.
+
+Grunnen til man ønsker å bruke parser combinators er at man lager små programmer som
+hver for seg er testbare.
+
+Når man setter de sammen så får man et større program som også er testbart.
+
+Vi kommer til å gå gjennom vanlige teknikker som man kan ta tilbake til prosjektene sine.
+
+For at vi skal kunne snakke om hvordan parser-combinators ser ut i Scala3 som vi skal 
+bruke i dag, så trenger vi å gå litt gjennom basic Scala syntaks.
+
+-->
+
 ---
 ### En Scala primer
 
-```scala
+```scala 3
 // en verdi av typen Int
 val value: Int = 1
 val value = 1
-
-// En mutabel variabel av typen String
-var x: String = "Hello"
-x = x + " World"
 
 // metodekall
 println("na" * 10 + " Batman")
@@ -33,7 +56,7 @@ println("na" * 10 + " Batman")
 
 ---
 
-```scala
+```scala 3
 
 // Metode definisjon
 def sayHello(who: String): Unit = println(s"Hello $who")
@@ -47,8 +70,10 @@ generic(1.0)
 ```
 
 ---
-```scala
+```scala 3
+// siste utrykk returneres
 def isEven(x: Int): Boolean = x % 2 == 0
+// I Scala er if et utrykk
 def evenString(x: Int) = if isEven(x) then "even" else "odd"
 
 
@@ -63,16 +88,12 @@ def even(x: Int) = if isEven(x) then EvenOdd.Even else EvenOdd.Odd
 ---
 ## case class
 
-```scala
+```scala 3
 case class Dog(name: String)
 
 val dog = Dog("Fido")
 
-val newDogName = dog.copy(name = "xxxx")
-
 println(dog)
-println(newDogName)
-
 
 ```
 
@@ -81,7 +102,7 @@ println(newDogName)
 ## Algebraiske datatyper
 
 
-```scala
+```scala 3
 enum EvenOdd {    
     case Even(num: Int)
     case Odd(num: Int)
@@ -102,7 +123,7 @@ def even(x: Int): EvenOdd = if isEven(x) then EvenOdd.Even(x) else EvenOdd.Odd(x
 
 # Hva er en parser?
 
-```scala
+```scala 3
 def parser[I, O](input: I): ParseResult[I, O] = ???
 ```
 
@@ -117,7 +138,7 @@ ParseResult vil inneholde posisjonsdata for inputen, og eventuelle feil.
 
 # Hva er en parser?
 
-```scala
+```scala 3
 def parser[I, O]: I => ParseResult[I, O] = ???
 ```
 
@@ -129,7 +150,7 @@ Litt forenklet kan man se på det som en funksjon fra I til ParseResult[I, O].
 
 # Hva er en parser?
 
-```scala
+```scala 3
 def parser[O]: String => ParseResult[O] = ???
 ```
 
@@ -144,7 +165,7 @@ en type O.
 
 # Hva er en parser?
 
-```scala
+```scala 3
 final case class Parser[O](run: String => ParseResult[O])
 ```
 
@@ -158,9 +179,9 @@ Her har vi pakket inn en funksjon inn i en case klasse, men vi kan også lage et
 
 # Hva er en parser?
 
-```scala
+```scala 3
 trait Parser[O] {
-  def apply(input: String): ParseResult[O]
+  def parse(input: String): ParseResult[O]
 }
 ```
 
@@ -169,6 +190,24 @@ Det som vi kan gjøre med nå når vi har etablert hva en parser er, så kan vi 
 Det finnes flere mulige måter å gjøre det på.
 Her har vi pakket inn en funksjon inn i en case klasse, men vi kan også lage et interface eller det som i Scala blir kalt et trait.
 -->
+
+
+--- 
+# Cats Parse
+
+I cats-parse som vi kommer til å bruke her, så ser signaturen slik ut.
+
+```scala 3
+
+sealed trait Parser[A] extends Parser0[A] {
+  def parse(str: String): Either[Parser.Error, A] = ???
+}
+```
+
+
+`cats-parse` er substring orientert, så vi ser på biter av en streng, og henter ut informasjon fra den.
+Dette betyr at vi setter sammen parsere som matcher biter av strenger til vi når EOI (End of Input).
+
 
 ----
 # Parser combinators
@@ -191,102 +230,24 @@ Da kan vi se at vi setter sammen digit og alpha for å lage en ny parser som gj�
 Hver av disse kan testes for seg selv.
 -->
 
----
-
----
-# Parser Combinators
-
-<!--
-Dersom vi feks titter inni ParseResult, så ser det noenlunde slik ut:
-
--->
-
-## ParseResult
-
-```scala
-enum ParseResult[O] {
-    case Success(value: O, rest: Option[String], position: Position)
-    case Failure(message: String, position: Position)
-}
-```
-
-
----
-# cats-parse
-
-```scala
-libraryDependencies += "org.typelevel" % "cats-parse" % "1.0.0"
-```
-
-`cats-parse` er substring orientert, så vi ser på biter av en streng, og henter ut informasjon fra den.
-Dette betyr at vi setter sammen parsere som matcher biter av strenger til vi når EOF.
 
 ---
 # Eksempel på parsere
 
-```
+```scala 3
 val digit = Parser.charIn("1234567890")
 
 val alpha = Parser.charIn(('a' to 'z') ++ ('A' to 'Z'))
 
+// leses som: 1 eller flere alphaNum chars lagret unna som en streng 
 val alphanum: Parser[String] = (alpha | digit).rep.string
+
+// leses som: alpha påfølgende av 0 eller flere alphaNum chars lagret unna som en streng 
+val identifier = (alpha ~ alphaNum.rep0).string
+
 
 val string = Parser.string("input")
 ```
 
 ---
-
-# Et raskt sidesprang
-
-Backus–Naur form (BNF)
-
-
----
-
-# Backus–Naur form (BNF)
-
-
-> In computer science, Backus–Naur form (/ˌbækəs ˈnaʊər/) (BNF or Backus normal form) is a notation used to describe the syntax of programming languages or other formal languages. It was developed by John Backus and Peter Naur. BNF can be described as a metasyntax notation for context-free grammars. [...] BNF can be used to describe document formats, instruction sets, and communication protocols.
-
-[wikipedia](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form)
-
----
-
-# Backus–Naur form (BNF) Variants
-
-> In computer science, extended Backus–Naur form (EBNF) is a family of metasyntax notations, any of which can be used to express a context-free grammar. EBNF is used to make a formal description of a formal language such as a computer programming language.
-[wikipedia](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form)
-
-```
-digit excluding zero = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
-digit                = "0" | digit excluding zero ;
-```
-
----
- 
-# Backus–Naur form (BNF) Variants
-
-> Augmented Backus–Naur form (ABNF) and Routing Backus–Naur form (RBNF) are extensions commonly used to describe Internet Engineering Task Force (IETF) protocols.
-[wikipedia](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
-
-```
-rule = definition ; comment CR LF
-``` 
-
-<!-- Vi kommer til å se på dette litt nærmere når vi skal se på oppgaveløsning. 
-For de som er kjent med RFCer så er dette brukt i stort sett alle.
---->
-
----
-
-# ABNF eksempel - JSON Pointer 
-[RFC6901](https://www.rfc-editor.org/rfc/rfc6901)
-
-```
-      json-pointer    = *( "/" reference-token )
-      reference-token = *( unescaped / escaped )
-      unescaped       = %x00-2E / %x30-7D / %x7F-10FFFF
-         ; %x2F ('/') and %x7E ('~') are excluded from 'unescaped'
-      escaped         = "~" ( "0" / "1" )
-        ; representing '~' and '/', respectively
-```
+# Oppgaver
