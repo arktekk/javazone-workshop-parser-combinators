@@ -5,6 +5,9 @@ import org.scalatest.funsuite.AnyFunSuite
 
 trait ParserSuite extends AnyFunSuite {
 
+  inline def implement_me: Parser[Unit] = ???
+  inline def implement_me[A]: Parser[A] = ???
+
   inline def assertParses[A](parser: Parser[A], inputs: (String, A)*) = {
     inputs.foreach { (input, expectedResult) =>
       val result = parser.parseAll(input)

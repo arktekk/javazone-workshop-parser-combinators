@@ -1,7 +1,7 @@
 package arktekk.oppgave1
 
 import arktekk.ParserSuite
-import cats.parse.{Parser, Rfc5234}
+import cats.parse.Parser
 
 class Backtracking extends ParserSuite {
 
@@ -17,12 +17,7 @@ class Backtracking extends ParserSuite {
       ".55"  -> Tall.Flyttall(0.55)
     )
 
-    val heltall = Rfc5234.digit.rep.string.map(s => Tall.Heltall(s.toInt)).withContext("heltall")
-    val flyttall = (Rfc5234.digit.rep0.with1 ~ Parser.char('.') ~ Rfc5234.digit.rep).string
-      .map(s => Tall.Flyttall(s.toDouble))
-      .withContext("flyttall")
-
-    val p = flyttall.backtrack | heltall
+    val p: Parser[Tall] = implement_me
 
     assertParses(p, validInputs*)
   }
@@ -42,15 +37,7 @@ class Backtracking extends ParserSuite {
       "19m"  -> Lengde.Meter(19)
     )
 
-    val heltall: Parser[Int] = Rfc5234.digit.rep.string.mapFilter(_.toIntOption)
-
-    val millimeter: Parser[Lengde] =
-      (heltall <* Parser.string("mm")).map(Lengde.Millimeter.apply).withContext("millimeter")
-    val centimeter: Parser[Lengde] =
-      (heltall <* Parser.string("cm")).map(Lengde.Centimeter.apply).withContext("centimeter")
-    val meter: Parser[Lengde] = (heltall <* Parser.string("m")).map(Lengde.Meter.apply).withContext("meter")
-
-    val p = millimeter.backtrack | centimeter.backtrack | meter
+    val p: Parser[Lengde] = implement_me
 
     assertParses(p, validInputs*)
   }

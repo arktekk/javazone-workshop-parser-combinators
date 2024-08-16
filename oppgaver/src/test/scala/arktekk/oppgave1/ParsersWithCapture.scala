@@ -1,7 +1,7 @@
 package arktekk.oppgave1
 
-import cats.parse.{Parser, Rfc5234}
 import arktekk.ParserSuite
+import cats.parse.Parser
 
 class ParsersWithCapture extends ParserSuite {
 
@@ -13,7 +13,7 @@ class ParsersWithCapture extends ParserSuite {
       " a  " -> "a"
     )
 
-    val p: Parser[String] = Parser.char('a').string.surroundedBy(Rfc5234.wsp.rep0)
+    val p: Parser[String] = implement_me
 
     assertParses(p, validInputs*)
   }
@@ -25,7 +25,18 @@ class ParsersWithCapture extends ParserSuite {
       "æøåÆØÅ" -> "æøåÆØÅ"
     )
 
-    val p = Parser.charIn(0x00.toChar to 0x10ffff.toChar).rep.string
+    val p: Parser[String] = implement_me
+
+    assertParses(p, validInputs*)
+  }
+
+  test("boolean") {
+    val validInputs = List(
+      "true"  -> true,
+      "false" -> false
+    )
+
+    val p: Parser[Boolean] = implement_me
 
     assertParses(p, validInputs*)
   }
