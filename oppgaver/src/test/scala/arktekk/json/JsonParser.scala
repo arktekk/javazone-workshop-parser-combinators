@@ -73,7 +73,7 @@ class JsonParser extends ParserSuite {
       "true"  -> JsonBoolean(true)
     )
 
-    assertParses(jsonValue, validInputs*)
+    assertParses(jsonValue, validInputs)
   }
 
   test("jsonNumber") {
@@ -82,7 +82,7 @@ class JsonParser extends ParserSuite {
       "123.123" -> JsonNumber(123.123)
     )
 
-    assertParses(jsonValue, validInputs*)
+    assertParses(jsonValue, validInputs)
   }
 
   test("jsonString") {
@@ -90,7 +90,7 @@ class JsonParser extends ParserSuite {
       "\"foo\"" -> JsonString("foo"),
       "\"æøå\"" -> JsonString("æøå")
     )
-    assertParses(jsonValue, validInputs*)
+    assertParses(jsonValue, validInputs)
   }
 
   test("jsonArray") {
@@ -99,7 +99,7 @@ class JsonParser extends ParserSuite {
       "[ 1, 20 ]" -> JsonArray(List(JsonNumber(1), JsonNumber(20)))
     )
 
-    assertParses(jsonValue, validInputs*)
+    assertParses(jsonValue, validInputs)
   }
 
   test("jsonObject") {
@@ -114,6 +114,6 @@ class JsonParser extends ParserSuite {
       )
     )
 
-    assertParses(jsonValue, validInputs*)
+    assertParses(jsonValue, validInputs)
   }
 }
