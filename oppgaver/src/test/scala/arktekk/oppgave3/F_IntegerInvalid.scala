@@ -4,7 +4,7 @@ import io.circe.parser.parse as parseJson
 import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
-class IntegerInvalid extends AnyFunSuite {
+class F_IntegerInvalid extends AnyFunSuite {
   test("us-after-oct") {
     val result = arktekk.oppgave3.toml.parseAll("""us-after-oct = 0o_1
       |""".stripMargin)

@@ -4,7 +4,7 @@ import io.circe.parser.parse as parseJson
 import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
-class DatetimeValid extends AnyFunSuite {
+class C_DatetimeValid extends AnyFunSuite {
   test("local-date") {
     val Right(result) = arktekk.oppgave3.toml.parseAll("""bestdayever = 1987-07-05
       |""".stripMargin): @unchecked

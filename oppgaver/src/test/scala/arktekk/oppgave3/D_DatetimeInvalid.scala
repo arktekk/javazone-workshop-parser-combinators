@@ -4,7 +4,7 @@ import io.circe.parser.parse as parseJson
 import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
-class DatetimeInvalid extends AnyFunSuite {
+class D_DatetimeInvalid extends AnyFunSuite {
   test("offset-overflow-minute") {
     val result = arktekk.oppgave3.toml
       .parseAll("""# Minute must be 00-59; we allow 60 too because some people do write offsets of

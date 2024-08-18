@@ -4,7 +4,7 @@ import io.circe.parser.parse as parseJson
 import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
-class BoolValid extends AnyFunSuite {
+class A_BoolValid extends AnyFunSuite {
   test("bool") {
     val Right(result) = arktekk.oppgave3.toml.parseAll("""t = true
       |f = false

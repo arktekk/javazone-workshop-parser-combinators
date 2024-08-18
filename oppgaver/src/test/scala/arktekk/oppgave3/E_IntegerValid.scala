@@ -4,7 +4,7 @@ import io.circe.parser.parse as parseJson
 import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
-class IntegerValid extends AnyFunSuite {
+class E_IntegerValid extends AnyFunSuite {
   test("float64-max") {
     val Right(result) =
       arktekk.oppgave3.toml.parseAll("""# Maximum and minimum safe float64 natural numbers. Mainly here for

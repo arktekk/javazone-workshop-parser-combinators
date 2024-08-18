@@ -4,7 +4,7 @@ import io.circe.parser.parse as parseJson
 import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
-class BoolInvalid extends AnyFunSuite {
+class B_BoolInvalid extends AnyFunSuite {
   test("mixed-case-true") {
     val result = arktekk.oppgave3.toml.parseAll("""mixed-case-true         = trUe
       |""".stripMargin)
