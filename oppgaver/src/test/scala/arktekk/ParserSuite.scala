@@ -35,10 +35,12 @@ trait ParserSuite extends AnyFunSuite {
 
   inline def assertParsesValid[A](parser: Parser0[A], input: String): Unit = assertParsesValid(parser, List(input))
 
-  inline def assertParsesInvalid[A](parser: Parser0[A], inputs: List[String]) = {
+  inline def assertParsesInvalid[A](parser: Parser0[A], inputs: List[String]): Unit = {
     inputs.foreach { input =>
       val result = parser.parseAll(input)
       assert(result.isLeft)
     }
   }
+
+  inline def assertParsesInvalid[A](parser: Parser0[A], input: String): Unit = assertParsesInvalid(parser, List(input))
 }
