@@ -215,36 +215,24 @@ val date_time =
 val value: P[TomlVal] = boolean | date_time.backtrack | integer
 
 // keyval-sep = ws %x3D ws ; =
-val keyval_sep: P[Unit] = (ws.with1 ~ P.char('=') ~ ws).void
+val keyval_sep: P[Unit] = P.char('=').surroundedBy(ws).void
 
-// dot-sep   = ws %x2E ws  ; . Period
-//
-// dotted-key = simple-key 1*( dot-sep simple-key )
-// quoted-key = basic-string / literal-string
-// unquoted-key = 1*( ALPHA / DIGIT / %x2D / %x5F ) ; A-Z / a-z / 0-9 / - / _
-val unquoted_key: P[String] = (ALPHA | DIGIT | minus | underscore).rep.string
-
-// simple-key = quoted-key / unquoted-key
-val simple_key: P[String] = unquoted_key
-
-// key = simple-key / dotted-key
-val key: P[String] = simple_key
+// key = 1*( ALPHA / DIGIT / %x2D / %x5F ) ; A-Z / a-z / 0-9 / - / _
+val key: P[String] = (ALPHA | DIGIT | minus | underscore).rep.string
 
 // keyval = key keyval-sep val
 val keyval: P[TomlKeyVal] = (key ~ (keyval_sep *> value))
   .map((key, value) => TomlKeyVal(key, value))
 
-// expression =  ws [ comment ]
 // expression =/ ws keyval ws [ comment ]
-// expression =/ ws table ws [ comment ]
-val expression: P[TomlKeyVal] =
-  ws.with1 *> keyval
+val expression: P[TomlKeyVal] = ws.with1 *> keyval
 
 // toml = expression *( newline expression )
 val toml: Parser0[TomlDocument] = {
   val emptyline: P[Unit]                       = ((ws ~ comment.?).with1 ~ newline).void
   val expressions: P[NonEmptyList[TomlKeyVal]] = expression.repSep(emptyline.rep)
 
-  (emptyline.rep0 *> expressions <* emptyline.rep0)
+  expressions
+    .surroundedBy(emptyline.rep0)
     .map(es => TomlDocument(es.toList))
 }
