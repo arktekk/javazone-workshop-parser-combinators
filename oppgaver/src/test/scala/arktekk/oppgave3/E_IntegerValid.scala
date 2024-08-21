@@ -1,8 +1,6 @@
 package arktekk.oppgave3
 
 import arktekk.ParserSuite
-import io.circe.parser.parse as parseJson
-import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
 class E_IntegerValid extends ParserSuite {
@@ -13,7 +11,7 @@ class E_IntegerValid extends ParserSuite {
       "-9_007_199_254_740_991" -> TomlInteger("-9007199254740991")
     )
 
-    assertParses(integer, inputs)
+    assertParses(tomlInteger, inputs)
   }
 
   test("zero") {
@@ -32,7 +30,7 @@ class E_IntegerValid extends ParserSuite {
       "0b00000" -> TomlInteger("0")
     )
 
-    assertParses(integer, inputs)
+    assertParses(tomlInteger, inputs)
   }
 
   test("long") {
@@ -42,7 +40,7 @@ class E_IntegerValid extends ParserSuite {
       "-9223372036854775808" -> TomlInteger("-9223372036854775808")
     )
 
-    assertParses(integer, inputs)
+    assertParses(tomlInteger, inputs)
   }
 
   test("literals") {
@@ -58,7 +56,7 @@ class E_IntegerValid extends ParserSuite {
       "0x00987"     -> TomlInteger("2439")
     )
 
-    assertParses(integer, inputs)
+    assertParses(tomlInteger, inputs)
   }
 
   test("integer") {
@@ -69,7 +67,7 @@ class E_IntegerValid extends ParserSuite {
       "0"   -> TomlInteger("0")
     )
 
-    assertParses(integer, inputs)
+    assertParses(tomlInteger, inputs)
   }
 
   test("underscore") {
@@ -77,6 +75,6 @@ class E_IntegerValid extends ParserSuite {
       "1_000"   -> TomlInteger("1000"),
       "1_1_1_1" -> TomlInteger("1111")
     )
-    assertParses(integer, inputs)
+    assertParses(tomlInteger, inputs)
   }
 }

@@ -85,7 +85,7 @@ val dec_int: P[String] = ((minus | plus).?.with1 ~ unsigned_dec_int).string
   .map(s => s.replaceAll("_", "").replaceAll("\\+", ""))
 
 // integer = dec-int / hex-int / oct-int / bin-int
-val integer: P[TomlInteger] = (hex_int | oct_int | bin_int | dec_int)
+val tomlInteger: P[TomlInteger] = (hex_int | oct_int | bin_int | dec_int)
   .map { s =>
     val i = s.toLong
     if i == 0L then TomlInteger("0")
@@ -207,32 +207,6 @@ val local_date: P[TomlDateLocal] = full_date.string.map(TomlDateLocal.apply)
 val local_time: P[TomlTimeLocal] = partial_time.map(TomlTimeLocal.apply)
 
 //date-time      = offset-date-time / local-date-time / local-date / local-time
-val date_time =
+val tomlDateTime: P[TomlVal] =
   offset_date_time.backtrack | local_date_time.backtrack | local_date.backtrack | local_time
 
-// ;; Key-Value pairs
-// val = string / boolean / array / inline-table / date-time / float / integer
-val value: P[TomlVal] = boolean | date_time.backtrack | integer
-
-// keyval-sep = ws %x3D ws ; =
-val keyval_sep: P[Unit] = P.char('=').surroundedBy(ws).void
-
-// key = 1*( ALPHA / DIGIT / %x2D / %x5F ) ; A-Z / a-z / 0-9 / - / _
-val key: P[String] = (ALPHA | DIGIT | minus | underscore).rep.string
-
-// keyval = key keyval-sep val
-val keyval: P[TomlKeyVal] = (key ~ (keyval_sep *> value))
-  .map((key, value) => TomlKeyVal(key, value))
-
-// expression =/ ws keyval ws [ comment ]
-val expression: P[TomlKeyVal] = ws.with1 *> keyval
-
-// toml = expression *( newline expression )
-val toml: Parser0[TomlDocument] = {
-  val emptyline: P[Unit]                       = ((ws ~ comment.?).with1 ~ newline).void
-  val expressions: P[NonEmptyList[TomlKeyVal]] = expression.repSep(emptyline.rep)
-
-  expressions
-    .surroundedBy(emptyline.rep0)
-    .map(es => TomlDocument(es.toList))
-}

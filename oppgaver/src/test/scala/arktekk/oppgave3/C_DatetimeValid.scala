@@ -1,8 +1,6 @@
 package arktekk.oppgave3
 
 import arktekk.ParserSuite
-import io.circe.parser.parse as parseJson
-import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
 class C_DatetimeValid extends ParserSuite {
@@ -10,7 +8,7 @@ class C_DatetimeValid extends ParserSuite {
   test("local-date") {
     val input = "1987-07-05" -> TomlDateLocal("1987-07-05")
 
-    assertParses(date_time, input)
+    assertParses(tomlDateTime, input)
   }
 
   test("timezone") {
@@ -21,7 +19,7 @@ class C_DatetimeValid extends ParserSuite {
       "1987-07-05T17:45:56+13:00" -> TomlDateTime("1987-07-05T17:45:56+13:00")
     )
 
-    assertParses(date_time, validInputs)
+    assertParses(tomlDateTime, validInputs)
   }
 
   test("datetime") {
@@ -31,7 +29,7 @@ class C_DatetimeValid extends ParserSuite {
       "1987-07-05t17:45:00z" -> TomlDateTime("1987-07-05T17:45:00Z")
     )
 
-    assertParses(date_time, validInputs)
+    assertParses(tomlDateTime, validInputs)
   }
 
   test("local") {
@@ -41,7 +39,7 @@ class C_DatetimeValid extends ParserSuite {
       "1987-07-05 17:45:00"     -> TomlDateTimeLocal("1987-07-05T17:45:00")
     )
 
-    assertParses(date_time, validInputs)
+    assertParses(tomlDateTime, validInputs)
   }
 
   test("no-seconds") {
@@ -54,7 +52,7 @@ class C_DatetimeValid extends ParserSuite {
       "1979-05-27T07:32"       -> TomlDateTimeLocal("1979-05-27T07:32:00")
     )
 
-    assertParses(date_time, validInputs)
+    assertParses(tomlDateTime, validInputs)
   }
 
   test("leap-year") {
@@ -67,7 +65,7 @@ class C_DatetimeValid extends ParserSuite {
       "2024-02-29"           -> TomlDateLocal("2024-02-29")
     )
 
-    assertParses(date_time, validInputs)
+    assertParses(tomlDateTime, validInputs)
   }
 
   test("edge") {
@@ -80,7 +78,7 @@ class C_DatetimeValid extends ParserSuite {
       "9999-12-31"           -> TomlDateLocal("9999-12-31")
     )
 
-    assertParses(date_time, validInputs)
+    assertParses(tomlDateTime, validInputs)
   }
 
   test("milliseconds") {
@@ -91,7 +89,7 @@ class C_DatetimeValid extends ParserSuite {
       "1987-07-05T17:45:56.6+08:00"   -> TomlDateTime("1987-07-05T17:45:56.600+08:00")
     )
 
-    assertParses(date_time, validInputs)
+    assertParses(tomlDateTime, validInputs)
   }
 
   test("local-time") {
@@ -100,7 +98,7 @@ class C_DatetimeValid extends ParserSuite {
       "10:32:00.555" -> TomlTimeLocal("10:32:00.555")
     )
 
-    assertParses(date_time, validInputs)
+    assertParses(tomlDateTime, validInputs)
   }
 
 }
