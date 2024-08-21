@@ -4,7 +4,7 @@ import arktekk.ParserSuite
 import org.scalatest.funsuite.AnyFunSuite
 import TomlDateTimeParser.*
 
-class C_DatetimeValid extends ParserSuite {
+class B_DatetimeValid extends ParserSuite {
 
   test("local-date") {
     val input = "1987-07-05" -> TomlDateLocal("1987-07-05")

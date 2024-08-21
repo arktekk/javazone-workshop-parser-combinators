@@ -4,7 +4,7 @@ import arktekk.ParserSuite
 import arktekk.oppgave3.TomlIntegerParser.tomlInteger
 import org.scalatest.funsuite.AnyFunSuite
 
-class F_IntegerInvalid extends ParserSuite {
+class E_IntegerInvalid extends ParserSuite {
   test("us-after-oct") {
     val invalidInput = "0o_1"
 

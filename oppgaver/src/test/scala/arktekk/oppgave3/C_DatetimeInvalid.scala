@@ -4,7 +4,7 @@ import arktekk.ParserSuite
 import org.scalatest.funsuite.AnyFunSuite
 import TomlDateTimeParser.tomlDateTime
 
-class D_DatetimeInvalid extends ParserSuite {
+class C_DatetimeInvalid extends ParserSuite {
   test("offset-overflow-minute") {
     // Minute must be 00-59
     val invalidInput = "1985-06-18 17:04:07+12:61"

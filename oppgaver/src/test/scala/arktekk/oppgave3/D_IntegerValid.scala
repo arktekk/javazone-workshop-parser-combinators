@@ -4,7 +4,7 @@ import arktekk.ParserSuite
 import arktekk.oppgave3.TomlIntegerParser.*
 import org.scalatest.funsuite.AnyFunSuite
 
-class E_IntegerValid extends ParserSuite {
+class D_IntegerValid extends ParserSuite {
   test("float64-max") {
     // Maximum and minimum safe float64 natural numbers. Mainly here for -int-as-float.
     val inputs = List(
