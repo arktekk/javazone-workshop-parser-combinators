@@ -1,274 +1,236 @@
 package arktekk.oppgave3
 
+import arktekk.ParserSuite
 import io.circe.parser.parse as parseJson
 import io.circe.syntax.EncoderOps
 import org.scalatest.funsuite.AnyFunSuite
 
-class F_IntegerInvalid extends AnyFunSuite {
+class F_IntegerInvalid extends ParserSuite {
   test("us-after-oct") {
-    val result = arktekk.oppgave3.toml.parseAll("""us-after-oct = 0o_1
-      |""".stripMargin)
+    val invalidInput = "0o_1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("invalid-bin") {
-    val result = arktekk.oppgave3.toml.parseAll("""invalid-bin = 0b0012
-      |""".stripMargin)
+    val invalidInput = "0b0012"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("trailing-us") {
-    val result = arktekk.oppgave3.toml.parseAll("""trailing-us = 123_
-      |""".stripMargin)
+    val invalidInput = "123_"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("incomplete-oct") {
-    val result = arktekk.oppgave3.toml.parseAll("""incomplete-oct = 0o
-      |""".stripMargin)
+    val invalidInput = "0o"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("negative-oct") {
-    val result = arktekk.oppgave3.toml.parseAll("""negative-oct = -0o755
-      |""".stripMargin)
+    val invalidInput = "-0o755"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("double-sign-plus") {
-    val result = arktekk.oppgave3.toml.parseAll("""double-sign-plus = ++99
-      |""".stripMargin)
+    val invalidInput = "++99"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("double-us") {
-    val result = arktekk.oppgave3.toml.parseAll("""double-us = 1__23
-      |""".stripMargin)
+    val invalidInput = "1__23"
 
-    assert(result.isLeft)
+    assertParsesInvalid(date_time, invalidInput)
   }
 
   test("leading-us-bin") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-us-bin = _0b1
-      |""".stripMargin)
+    val invalidInput = "_0b1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("trailing-us-oct") {
-    val result = arktekk.oppgave3.toml.parseAll("""trailing-us-oct = 0o1_
-      |""".stripMargin)
+    val invalidInput = "0o1_"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("invalid-hex-1") {
-    val result = arktekk.oppgave3.toml.parseAll("""invalid-hex-1 = 0xaafz
-      |""".stripMargin)
+    val invalidInput = "0xaafz"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("positive-bin") {
-    val result = arktekk.oppgave3.toml.parseAll("""positive-bin = +0b11010110
-      |""".stripMargin)
+    val invalidInput = "+0b11010110"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("capital-oct") {
-    val result = arktekk.oppgave3.toml.parseAll("""capital-oct = 0O0
-      |""".stripMargin)
+    val invalidInput = "0O0"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-zero-3") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-zero-3 = 0_0
-      |""".stripMargin)
+    val invalidInput = "0_0"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("invalid-hex") {
-    val result = arktekk.oppgave3.toml.parseAll("""invalid-hex = 0xaafz
-      |""".stripMargin)
+    val invalidInput = "0xaafz"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-us") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-us = _123
-      |""".stripMargin)
+    val invalidInput = "_123"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("positive-hex") {
-    val result = arktekk.oppgave3.toml.parseAll("""positive-hex = +0xff
-      |""".stripMargin)
+    val invalidInput = "+0xff"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-us-hex") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-us-hex = _0x1
-      |""".stripMargin)
+    val invalidInput = "_0x1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-zero-2") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-zero-2 = 00
-      |""".stripMargin)
+    val invalidInput = "00"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-zero-sign-1") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-zero-sign-1 = -01
-      |""".stripMargin)
+    val invalidInput = "-01"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-zero-1") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-zero-1 = 01
-      |""".stripMargin)
+    val invalidInput = "01"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("text-after-integer") {
-    val result = arktekk.oppgave3.toml.parseAll("""answer = 42 the ultimate answer?
-      |""".stripMargin)
+    val invalidInput = "42 the ultimate answer?"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-zero-sign-2") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-zero-sign-2 = +01
-      |""".stripMargin)
+    val invalidInput = "+01"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("trailing-us-bin") {
-    val result = arktekk.oppgave3.toml.parseAll("""trailing-us-bin = 0b1_
-      |""".stripMargin)
+    val invalidInput = "0b1_"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("positive-oct") {
-    val result = arktekk.oppgave3.toml.parseAll("""positive-oct = +0o755
-      |""".stripMargin)
+    val invalidInput = "+0o755"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-us-oct") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-us-oct = _0o1
-      |""".stripMargin)
+    val invalidInput = "_0o1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("invalid-oct") {
-    val result = arktekk.oppgave3.toml.parseAll("""invalid-oct = 0o778
-      |""".stripMargin)
+    val invalidInput = "0o778"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("incomplete-bin") {
-    val result = arktekk.oppgave3.toml.parseAll("""incomplete-bin = 0b
-      |""".stripMargin)
+    val invalidInput = "0b"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("us-after-bin") {
-    val result = arktekk.oppgave3.toml.parseAll("""us-after-bin = 0b_1
-      |""".stripMargin)
+    val invalidInput = "0b_1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("negative-bin") {
-    val result = arktekk.oppgave3.toml.parseAll("""negative-bin = -0b11010110
-      |""".stripMargin)
+    val invalidInput = "-0b11010110"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("leading-zero-sign-3") {
-    val result = arktekk.oppgave3.toml.parseAll("""leading-zero-sign-3 = +0_1
-      |""".stripMargin)
+    val invalidInput = "+0_1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("capital-hex") {
-    val result = arktekk.oppgave3.toml.parseAll("""capital-hex = 0X1
-      |""".stripMargin)
+    val invalidInput = "0X1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("invalid-hex-2") {
-    val result = arktekk.oppgave3.toml.parseAll("""invalid-hex-2 = 0xgabba00f1
-      |""".stripMargin)
+    val invalidInput = "0xgabba00f1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("trailing-us-hex") {
-    val result = arktekk.oppgave3.toml.parseAll("""trailing-us-hex = 0x1_
-      |""".stripMargin)
+    val invalidInput = "0x1_"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("double-sign-nex") {
-    val result = arktekk.oppgave3.toml.parseAll("""double-sign-nex = --99
-      |""".stripMargin)
+    val invalidInput = "--99"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("capital-bin") {
-    val result = arktekk.oppgave3.toml.parseAll("""capital-bin = 0B0
-      |""".stripMargin)
+    val invalidInput = "0B0"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("negative-hex") {
-    val result = arktekk.oppgave3.toml.parseAll("""negative-hex = -0xff
-      |""".stripMargin)
+    val invalidInput = "-0xff"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("incomplete-hex") {
-    val result = arktekk.oppgave3.toml.parseAll("""incomplete-hex = 0x
-      |""".stripMargin)
+    val invalidInput = "0x"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
 
   test("us-after-hex") {
-    val result = arktekk.oppgave3.toml.parseAll("""us-after-hex = 0x_1
-      |""".stripMargin)
+    val invalidInput = "0x_1"
 
-    assert(result.isLeft)
+    assertParsesInvalid(integer, invalidInput)
   }
-
 }

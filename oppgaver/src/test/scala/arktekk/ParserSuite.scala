@@ -8,6 +8,22 @@ trait ParserSuite extends AnyFunSuite {
   inline def assertParses[A](parser: Parser[A], inputs: List[(String, A)]): Unit = {
     inputs.foreach { (input, expectedResult) =>
       val result = parser.parseAll(input)
+      if result.isLeft then {
+        val ll = LazyList.from(0)
+
+        val idxs: String = ll.take(input.length).map(i => (i % 10).toString).mkString
+
+        println("Feil under parsing av:")
+        println(idxs)
+        println(input)
+        println(s"resultat:\n$result")
+      }
+
+      if result != Right(expectedResult) then {
+        println("Feil under parsing av:")
+        println(input)
+      }
+
       assert(result === Right(expectedResult))
     }
   }
@@ -19,7 +35,6 @@ trait ParserSuite extends AnyFunSuite {
     inputs.foreach { (input: String) =>
       val result = parser.parseAll(input)
       if result.isLeft then {
-
         val ll = LazyList.from(0)
 
         val idxs: String = ll.take(input.length).map(i => (i % 10).toString).mkString
