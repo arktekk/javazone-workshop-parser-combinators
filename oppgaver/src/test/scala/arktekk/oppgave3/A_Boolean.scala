@@ -2,6 +2,7 @@ package arktekk.oppgave3
 
 import arktekk.ParserSuite
 import org.scalatest.funsuite.AnyFunSuite
+import TomlBooleanParser.*
 
 class A_Boolean extends ParserSuite {
   test("valid booleans") {
@@ -11,7 +12,7 @@ class A_Boolean extends ParserSuite {
         "false" -> TomlBoolean("false")
       )
 
-    assertParses(boolean, validInputs)
+    assertParses(tomlBoolean, validInputs)
   }
 
   test("invalid booleans") {
@@ -34,6 +35,6 @@ class A_Boolean extends ParserSuite {
         "truthy"
       )
 
-    assertParsesInvalid(boolean, invalidInputs)
+    assertParsesInvalid(tomlBoolean, invalidInputs)
   }
 }

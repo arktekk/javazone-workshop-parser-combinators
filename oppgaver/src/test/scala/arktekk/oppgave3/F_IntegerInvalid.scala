@@ -1,6 +1,7 @@
 package arktekk.oppgave3
 
 import arktekk.ParserSuite
+import arktekk.oppgave3.TomlIntegerParser.tomlInteger
 import org.scalatest.funsuite.AnyFunSuite
 
 class F_IntegerInvalid extends ParserSuite {
@@ -43,7 +44,7 @@ class F_IntegerInvalid extends ParserSuite {
   test("double-us") {
     val invalidInput = "1__23"
 
-    assertParsesInvalid(tomlDateTime, invalidInput)
+    assertParsesInvalid(tomlInteger, invalidInput)
   }
 
   test("leading-us-bin") {

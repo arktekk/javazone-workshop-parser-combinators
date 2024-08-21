@@ -1,6 +1,7 @@
 package arktekk.oppgave3
 
 import arktekk.ParserSuite
+import arktekk.oppgave3.TomlIntegerParser.*
 import org.scalatest.funsuite.AnyFunSuite
 
 class E_IntegerValid extends ParserSuite {

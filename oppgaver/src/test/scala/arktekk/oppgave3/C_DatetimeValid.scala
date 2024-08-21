@@ -2,6 +2,7 @@ package arktekk.oppgave3
 
 import arktekk.ParserSuite
 import org.scalatest.funsuite.AnyFunSuite
+import TomlDateTimeParser.*
 
 class C_DatetimeValid extends ParserSuite {
 

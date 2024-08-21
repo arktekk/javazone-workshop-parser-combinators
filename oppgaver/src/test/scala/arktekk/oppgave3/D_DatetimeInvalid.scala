@@ -2,6 +2,7 @@ package arktekk.oppgave3
 
 import arktekk.ParserSuite
 import org.scalatest.funsuite.AnyFunSuite
+import TomlDateTimeParser.tomlDateTime
 
 class D_DatetimeInvalid extends ParserSuite {
   test("offset-overflow-minute") {
