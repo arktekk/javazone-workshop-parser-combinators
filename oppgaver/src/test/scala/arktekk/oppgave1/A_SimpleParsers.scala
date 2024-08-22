@@ -5,49 +5,49 @@ import arktekk.ParserSuite
 
 class A_SimpleParsers extends ParserSuite {
 
-  test("parse \"a\" vha char") {
+  test("parse \"a\" med char") {
     val input = "a"
     val p     = implement_me
 
     assertParsesValid(p, input)
   }
 
-  test("parse \"ab\" vha char og ~") {
+  test("parse \"ab\" med char og ~") {
     val input = "ab"
     val p     = implement_me
 
     assertParsesValid(p, input)
   }
 
-  test("parse \"ab\" vha string") {
+  test("parse \"ab\" med string") {
     val input = "ab"
     val p     = implement_me
 
     assertParsesValid(p, input)
   }
 
-  test("parse \"aba\" vha char og ~") {
+  test("parse \"aba\" med char og ~") {
     val input = "aba"
     val p     = implement_me
 
     assertParsesValid(p, input)
   }
 
-  test("parse \"aba\" vha char og surroundedBy") {
+  test("parse \"aba\" med char og surroundedBy") {
     val input = "aba"
     val p     = implement_me
 
     assertParsesValid(p, input)
   }
 
-  test("parse \"aba\" vha char og between") {
+  test("parse \"aba\" med char og between") {
     val input = "aba"
     val p     = implement_me
 
     assertParsesValid(p, input)
   }
 
-  test("parse \"aa\" og \"aaa\", men ikke \"a\" eller \"aaaa\" vha rep") {
+  test("parse \"aa\" og \"aaa\", men ikke \"a\" eller \"aaaa\" med rep") {
     val validInputs   = List("aa", "aaa")
     val invalidInputs = List("a", "aaaa")
     val p             = implement_me
@@ -56,7 +56,7 @@ class A_SimpleParsers extends ParserSuite {
     assertParsesInvalid(p, invalidInputs)
   }
 
-  test("parse \"(a, a)\" (minst to a'er) vha repSep og between") {
+  test("parse \"(a, a)\" (minst to a'er) med repSep og between") {
     val validInputs   = List("(a, a, a)", "(a, a)", "(a, a, a, a)")
     val invalidInputs = List("()", "(a)", "(a, aa)", "(a,a)")
 
@@ -66,7 +66,7 @@ class A_SimpleParsers extends ParserSuite {
     assertParsesInvalid(p, invalidInputs)
   }
 
-  test("parse \"a\" med vilkårlig mange spaces før og/eller etter vha surroundedBy") {
+  test("parse \"a\" med vilkårlig mange spaces før og/eller etter med surroundedBy") {
     val validInputs = List("a", " a", "  a", " a  ")
 
     val p = implement_me
@@ -84,7 +84,7 @@ class A_SimpleParsers extends ParserSuite {
     assertParsesInvalid(p, invalidInputs)
   }
 
-  test("naturlige tall vha charsWhile") {
+  test("naturlige tall med charsWhile") {
     val validInputs   = List("123", "234", "1", "0")
     val invalidInputs = List("-1", "0xff", "a", "12c")
 
@@ -94,7 +94,7 @@ class A_SimpleParsers extends ParserSuite {
     assertParsesInvalid(p, invalidInputs)
   }
 
-  test("naturlige tall vha charIn") {
+  test("naturlige tall med charIn") {
     val validInputs   = List("123", "234", "1", "0")
     val invalidInputs = List("-1", "0xff", "a", "12c")
 
@@ -104,7 +104,7 @@ class A_SimpleParsers extends ParserSuite {
     assertParsesInvalid(p, invalidInputs)
   }
 
-  test("naturlige tall vha Numbers.digit") {
+  test("naturlige tall med Numbers.digit") {
     val validInputs   = List("123", "234", "1", "0")
     val invalidInputs = List("-1", "0xff", "a", "12c")
 
@@ -114,7 +114,7 @@ class A_SimpleParsers extends ParserSuite {
     assertParsesInvalid(p, invalidInputs)
   }
 
-  test("naturlige tall vha Numbers.digits") {
+  test("naturlige tall med Numbers.digits") {
     val validInputs   = List("123", "234", "1", "0")
     val invalidInputs = List("-1", "0xff", "a", "12c")
 
@@ -124,7 +124,7 @@ class A_SimpleParsers extends ParserSuite {
     assertParsesInvalid(p, invalidInputs)
   }
 
-  test("DNA vha charIn") {
+  test("DNA med charIn") {
     val validInputs = List("ACGT", "AAA", "TT", "ATGG", "CCAATG")
 
     val p = implement_me
@@ -133,7 +133,7 @@ class A_SimpleParsers extends ParserSuite {
   }
 
   // ABNF
-  test("parse '1*a b 1*a' vha char, ~ og rep") {
+  test("parse '1*a b 1*a' med char, ~ og rep") {
     val validInputs   = List("aaba", "aba", "aaaabaaa")
     val invalidInputs = List("baaa", "aabbaa")
 
