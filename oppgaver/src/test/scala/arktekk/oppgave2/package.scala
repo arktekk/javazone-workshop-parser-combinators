@@ -1,4 +1,4 @@
-package arktekk.oppgave3
+package arktekk.oppgave2
 
 import cats.parse.Parser
 import org.scalatest.exceptions.TestPendingException

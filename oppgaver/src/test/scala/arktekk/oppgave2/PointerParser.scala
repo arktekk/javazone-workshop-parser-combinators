@@ -9,7 +9,7 @@ object PointerParser {
   //      escaped         = "~" ( "0" / "1" ) ; representing '~' and '/', respectively
 
   // skal være val
-  def parser: Parser0[Path] = ???
+  def parser: Parser0[Path] = implement_me
 
   def parse(input: String): Either[Parser.Error, Path] = parser.parseAll(input)
 
