@@ -3,7 +3,7 @@ package arktekk.oppgave1
 import arktekk.ParserSuite
 import cats.parse.Parser
 
-class Backtracking extends ParserSuite {
+class D_Backtracking extends ParserSuite {
 
   test("heltall eller flyttall") {
     enum Tall {
@@ -19,7 +19,7 @@ class Backtracking extends ParserSuite {
 
     val p: Parser[Tall] = implement_me
 
-    assertParses(p, validInputs*)
+    assertParses(p, validInputs)
   }
 
   test("parse mm, cm eller m (f.eks. \"10cm\")") {
@@ -39,7 +39,7 @@ class Backtracking extends ParserSuite {
 
     val p: Parser[Lengde] = implement_me
 
-    assertParses(p, validInputs*)
+    assertParses(p, validInputs)
   }
 
 }
