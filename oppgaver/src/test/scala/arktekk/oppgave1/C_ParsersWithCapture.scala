@@ -3,7 +3,7 @@ package arktekk.oppgave1
 import arktekk.ParserSuite
 import cats.parse.Parser
 
-class ParsersWithCapture extends ParserSuite {
+class C_ParsersWithCapture extends ParserSuite {
 
   test("parse \"a\" med vilkårlig mange spaces før og/eller etter") {
     val validInputs = List(
@@ -15,7 +15,7 @@ class ParsersWithCapture extends ParserSuite {
 
     val p: Parser[String] = implement_me
 
-    assertParses(p, validInputs*)
+    assertParses(p, validInputs)
   }
 
   test("character range") {
@@ -27,7 +27,7 @@ class ParsersWithCapture extends ParserSuite {
 
     val p: Parser[String] = implement_me
 
-    assertParses(p, validInputs*)
+    assertParses(p, validInputs)
   }
 
   test("boolean") {
@@ -38,6 +38,6 @@ class ParsersWithCapture extends ParserSuite {
 
     val p: Parser[Boolean] = implement_me
 
-    assertParses(p, validInputs*)
+    assertParses(p, validInputs)
   }
 }
