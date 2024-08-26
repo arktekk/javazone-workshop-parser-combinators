@@ -1,38 +1,44 @@
 package jz2024.qp
 
 import cats.parse.Parser._
-import cats.parse.Rfc5234.alpha
 import cats.parse.{Parser, Parser0}
-import io.lemonlabs.uri.decoder.PercentDecoder
 import scala.collection.immutable.ListMap
+import collection.immutable.Seq
 
 object QueryParamParser {
-  def _query_param: Parser[(String, Some[String])] =
+
+  private def rep0sep0[A](data: Parser0[A], separator: Parser[Any]): Parser0[List[A]] =
+    (data.? ~ (separator *> data).rep0).map { case (a, as) => a ++: as }
+
+  def extractQueryParams(tuples: Seq[(String, Option[String])]) =
+    QueryParams(
+      ListMap.from(tuples.map(PercentDecoder.decodeTuple).groupMap(_._1)(_._2).view.mapValues(_.flatten.toList))
+    )
+
+  val query_param: Parser[(String, Some[String])] =
     for {
-      key <- until(charIn("=&#")).string
-      _ <- char('=')
+      key   <- until(charIn("=&#")).string
+      _     <- char('=')
       value <- until0(charIn("&#"))
-    } yield extractTuple(key, value)
+    } yield key -> Some(value)
 
-  def _query_tok: Parser[(String, None.type)] =
+  val query_token: Parser[(String, None.type)] =
     for {
       key <- until(charIn("=&#")).string
-    } yield extractTok(key)
+    } yield key -> None
 
-  def nonQueryTokens = char('&').peek | char('#').peek | Parser.end
+  val nonQueryTokens = char('&').peek | char('#').peek | Parser.end
 
-  def _query_param_or_tok: Parser0[(String, Option[String])] =
-    _query_param.backtrack | _query_tok | nonQueryTokens.as(("", None))
+  val paramOrToken: Parser0[(String, Option[String])] =
+    query_param.backtrack | query_token | nonQueryTokens.as(("", None))
 
-  def _query_string: Parser[QueryParams] =
+  val queryParams1: Parser[QueryParams] =
     for {
-      _ <- char('?')
-      params <- rep0sep0(_query_param_or_tok, char('&'))
+      _      <- char('?')
+      params <- rep0sep0(paramOrToken, char('&'))
     } yield extractQueryParams(params)
 
-  def _maybe_query_string: Parser0[QueryString] =
-    _query_string | Parser.pure(QueryParams.empty)
+  val queryParams: Parser0[QueryParams] =
+    queryParams1 | Parser.pure(QueryParams.empty)
 
-  def extractQueryParams(tuples: immutable.Seq[(String, Option[String])]) =>
-    QueryParams(ListMap.from(tuples.map(PercentDecoder.decodeTuple)))
 }
