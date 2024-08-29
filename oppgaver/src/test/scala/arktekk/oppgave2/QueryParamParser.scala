@@ -1,9 +1,9 @@
-package jz2024.qp
+package arktekk.oppgave2
 
-import cats.parse.Parser._
+import cats.parse.Parser.*
 import cats.parse.{Parser, Parser0}
-import scala.collection.immutable.ListMap
-import collection.immutable.Seq
+
+import scala.collection.immutable.{ListMap, Seq}
 
 object QueryParamParser {
 
@@ -12,25 +12,28 @@ object QueryParamParser {
 
   def extractQueryParams(tuples: Seq[(String, Option[String])]) =
     QueryParams(
-      ListMap.from(tuples.map(PercentDecoder.decodeTuple).groupMap(_._1)(_._2).view.mapValues(_.flatten.toList))
+      ListMap.from(
+        tuples
+          .groupMap((k, _) => QueryParams.Encoded(k))((_, v) => v.map(QueryParams.Encoded.apply))
+          .view
+          .mapValues(_.flatten.toList)
+      )
     )
+
+  val keyParser: Parser[String] = until(charIn("=&#")).filter(!_.contains(" ")).withContext("key")
 
   val query_param: Parser[(String, Some[String])] =
     for {
-      key   <- until(charIn("=&#")).string
+      key   <- keyParser
       _     <- char('=')
-      value <- until0(charIn("&#"))
+      value <- until0(charIn("&#")).filter(!_.contains(" ")).withContext("value")
     } yield key -> Some(value)
 
   val query_token: Parser[(String, None.type)] =
-    for {
-      key <- until(charIn("=&#")).string
-    } yield key -> None
-
-  val nonQueryTokens = char('&').peek | char('#').peek | Parser.end
+    keyParser.map(_ -> None)
 
   val paramOrToken: Parser0[(String, Option[String])] =
-    query_param.backtrack | query_token | nonQueryTokens.as(("", None))
+    query_param.backtrack | query_token
 
   val queryParams1: Parser[QueryParams] =
     for {

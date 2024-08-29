@@ -1,12 +1,20 @@
-package jz2024.qp
+package arktekk.oppgave2
 
 import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets.UTF_8
 import scala.annotation.tailrec
 import scala.collection.mutable
-import java.nio.charset.StandardCharsets.UTF_8
+
+trait Decoder {
+  def decode(value: QueryParams.Encoded): String
+
+  def decodeTuple(kv: (QueryParams.Encoded, Option[QueryParams.Encoded])): (String, Option[String]) =
+    decode(kv._1) -> kv._2.map(decode)
+}
 
 //Copied from https://github.com/lemonlabsuk/scala-uri/blob/master/shared/src/main/scala/io/lemonlabs/uri/decoding/PercentDecoder.scala
-object PercentDecoder {
+
+object PercentDecoder extends Decoder {
   private val errorMessage =
     "It looks like this URL isn't Percent Encoded. Ideally you should Percent Encode the relevant parts of your URL"
 
@@ -43,10 +51,7 @@ object PercentDecoder {
     go(s.toCharArray.toList, new mutable.ArrayBuilder.ofByte)
   }
 
-  def decode(s: String): String =
-    new String(decodeBytes(s, UTF_8), UTF_8)
-
-  def decodeTuple(kv: (String, Option[String])): (String, Option[String]) =
-    decode(kv._1) -> kv._2.map(decode)
+  def decode(s: QueryParams.Encoded): String =
+    new String(decodeBytes(s.value, UTF_8), UTF_8)
 
 }
