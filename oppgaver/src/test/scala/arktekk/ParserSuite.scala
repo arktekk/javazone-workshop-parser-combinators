@@ -1,6 +1,6 @@
 package arktekk
 
-import cats.parse.{Parser, Parser0, Rfc5234}
+import cats.parse.{Parser, Parser0}
 import org.scalatest.exceptions.TestPendingException
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -9,7 +9,7 @@ trait ParserSuite extends AnyFunSuite {
   inline def implement_me[A]: Parser[A] = throw new TestPendingException
   inline def implement_me: Parser[Unit] = implement_me[Unit]
 
-  inline def assertParses[A](parser: Parser[A], inputs: List[(String, A)]): Unit = {
+  inline def assertParses[A](parser: Parser0[A], inputs: List[(String, A)]): Unit = {
     inputs.foreach { (input, expectedResult) =>
       val result = parser.parseAll(input)
       if result.isLeft then {
@@ -32,7 +32,7 @@ trait ParserSuite extends AnyFunSuite {
     }
   }
 
-  inline def assertParses[A](parser: Parser[A], input: (String, A)): Unit =
+  inline def assertParses[A](parser: Parser0[A], input: (String, A)): Unit =
     assertParses(parser, List(input))
 
   inline def assertParsesValid[A](parser: Parser0[A], inputs: List[String]): Unit = {

@@ -1,4 +1,4 @@
 java temurin-21.0.1+12.0.LTS
-sbt 1.10.0
+sbt 1.10.1
 scala-cli latest
 just latest
