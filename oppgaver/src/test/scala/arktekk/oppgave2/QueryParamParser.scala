@@ -10,29 +10,25 @@ object QueryParamParser {
   private def rep0sep0[A](data: Parser0[A], separator: Parser[Any]): Parser0[List[A]] =
     (data.? ~ (separator *> data).rep0).map { case (a, as) => a ++: as }
 
-  def extractQueryParams(tuples: Seq[(String, Option[String])]) =
+  def extractQueryParams(tuples: Seq[(QueryParams.Encoded, Option[QueryParams.Encoded])]) =
     QueryParams(
-      ListMap.from(
-        tuples
-          .groupMap((k, _) => QueryParams.Encoded(k))((_, v) => v.map(QueryParams.Encoded.apply))
-          .view
-          .mapValues(_.flatten.toList)
-      )
+      ListMap.from(tuples.groupMap(_._1)(_._2.toList).view.mapValues(_.flatten.toList))
     )
 
-  val keyParser: Parser[String] = until(charIn("=&#")).filter(!_.contains(" ")).withContext("key")
+  val encodedParser: Parser[QueryParams.Encoded] =
+    until(charIn("=&#")).filter(!_.contains(" ")).withContext("encoded").map(QueryParams.Encoded.apply)
 
-  val query_param: Parser[(String, Some[String])] =
+  val query_param: Parser[(QueryParams.Encoded, Some[QueryParams.Encoded])] =
     for {
-      key   <- keyParser
+      key   <- encodedParser
       _     <- char('=')
-      value <- until0(charIn("&#")).filter(!_.contains(" ")).withContext("value")
+      value <- encodedParser | Parser.end.as(QueryParams.Encoded(""))
     } yield key -> Some(value)
 
-  val query_token: Parser[(String, None.type)] =
-    keyParser.map(_ -> None)
+  val query_token: Parser[(QueryParams.Encoded, None.type)] =
+    encodedParser.map(_ -> None)
 
-  val paramOrToken: Parser0[(String, Option[String])] =
+  val paramOrToken: Parser0[(QueryParams.Encoded, Option[QueryParams.Encoded])] =
     query_param.backtrack | query_token
 
   val queryParams1: Parser[QueryParams] =

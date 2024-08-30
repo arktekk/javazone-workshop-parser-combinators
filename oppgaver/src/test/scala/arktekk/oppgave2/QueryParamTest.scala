@@ -1,7 +1,6 @@
 package arktekk.oppgave2
 
 import arktekk.ParserSuite
-import cats.parse.Parser0
 
 class QueryParamTest extends ParserSuite {
   test("minimal") {
