@@ -9,7 +9,8 @@ object QueryParams {
   object Encoded {
     def apply(s: String): Encoded = s
     extension (e: Encoded) {
-      def value: String = e
+      def value: String               = e
+      def decoded(d: Decoder): String = d.decode(e)
     }
   }
 
