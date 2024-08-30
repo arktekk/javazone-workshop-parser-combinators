@@ -4,6 +4,8 @@ import arktekk.ParserSuite
 import cats.data.NonEmptyList
 import cats.parse.{Numbers, Parser, Parser0, Rfc5234}
 
+/** Se foredrag/Augmented_Backus_Naur_form.pdf for hint til hva de forskjellige type parsere her betyr
+  */
 class B_ABNF extends ParserSuite {
 
   val a = Parser.char('a')
