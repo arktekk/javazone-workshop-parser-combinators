@@ -246,6 +246,7 @@ Nå når vi har sett litt på hvordan formelt beskrive en parser, la oss se på 
 dette kan se ut i Scala.
 --->
 
+---
 
 # Hva er en parser?
 
@@ -324,8 +325,6 @@ Disse operasjonene blir typisk kalt kombinatorer, derav navnet.
 --- 
 # Cats Parse
 
-I cats-parse som vi kommer til å bruke her, så ser signaturen slik ut.
-
 ```scala 3
 
 sealed trait Parser[A] extends Parser0[A] {
@@ -333,9 +332,11 @@ sealed trait Parser[A] extends Parser0[A] {
 }
 ```
 
+<!-- 
+I cats-parse som vi kommer til å bruke her, så ser signaturen slik ut.
 `cats-parse` er substring orientert, så vi ser på biter av en streng, og henter ut informasjon fra den.
 Dette betyr at vi setter sammen parsere som matcher biter av strenger til vi når EOI (End of Input).
-
+-->
 
 ---
 ## Kombinatorer
