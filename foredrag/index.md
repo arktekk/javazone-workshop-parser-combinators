@@ -147,7 +147,7 @@ println(dog)
 ## tuple
 
 ```scala 3
-// tilsavarer Pair i kotlin, men kan ha uendelig aritet
+// tilsvarer Pair i kotlin, men kan ha uendelig aritet
 val tuple: (String, Int) = ("Don't Panic", 42)
 
 println(tuple)
@@ -271,7 +271,7 @@ def parser[I, O]: I => ParseResult[I, O] = ???
 
 <!-- 
 Litt forenklet kan man se på det som en funksjon fra I til ParseResult[I, O].
-Denne er ekvivalent med med definisjonen på forrige slide. 
+Denne er ekvivalent med definisjonen på forrige slide. 
 -->
 
 ---
