@@ -49,7 +49,8 @@ class B_ABNF extends ParserSuite {
     assertParsesValid(p, validInputs)
   }
 
-  // %x30-37
+  // hint: x30 kan skrives som 0x30 i Scala
+  // og gjøres om til en char vha toChar
   test("%x30-37") {
     val validInputs = (0 to 7).toList.map(_.toString)
 
