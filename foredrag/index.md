@@ -20,13 +20,13 @@ Hvorfor er vi her?
 
 <!--
 
-Hvor mange her har brukt regulære utrykk?
+Hvor mange her har brukt regulære uttrykk?
 
-Flere har brukt Regulære utrykk for å hente ut data fra 
+Flere har brukt Regulære uttrykk for å hente ut data fra 
 strenger. Det vi skal se på i denne workshoppen er et alternativ til dette.
-En vits som ofte fortelles i forbindelse med regulære utrykk er:
+En vits som ofte fortelles i forbindelse med regulære uttrykk er:
 
-Jeg hadde et problem som jeg valgte å løse med regulære utrykk, nå har jeg to problemer.
+Jeg hadde et problem som jeg valgte å løse med regulære uttrykk, nå har jeg to problemer.
 
 Grunnen til man ønsker å bruke parser combinators er at man lager små programmer som
 hver for seg er testbare.
@@ -66,7 +66,7 @@ bruke i dag, så trenger vi å gå litt gjennom basic Scala syntaks.
 // en verdi av typen Int
 val value: Int = 1
 val value = 1
-// sløfyer typen, type inference
+// sløyfer typen, type inference
 
 // metodekall
 println("na" * 10 + " Batman")
@@ -87,7 +87,7 @@ for å vise at det finnes.
 // Metode definisjon
 def sayHello(who: String): Unit = println(s"Hello $who")
 def sayHello(who: String) = println(s"Hello $who")
-// sløfyer returtypen, type inference
+// sløyfer returtypen, type inference
 
 // metode definisjon med generiske typer
 def generic[A](input: A): Unit = println(s"called with ${input}")
@@ -98,9 +98,9 @@ generic(1.0)
 
 ---
 ```scala 3
-// siste utrykk returneres
+// siste uttrykk returneres
 def isEven(x: Int): Boolean = x % 2 == 0
-// I Scala er if et utrykk
+// I Scala er if et uttrykk
 def evenString(x: Int) = if isEven(x) then "even" else "odd"
 
 
@@ -147,7 +147,7 @@ println(dog)
 ## tuple
 
 ```scala 3
-// tilsavarer Pair i kotlin, men kan ha uendelig aritet
+// tilsvarer Pair i kotlin, men kan ha uendelig aritet
 val tuple: (String, Int) = ("Don't Panic", 42)
 
 println(tuple)
@@ -274,7 +274,7 @@ def parser[I, O]: I => ParseResult[I, O] = ???
 
 <!-- 
 Litt forenklet kan man se på det som en funksjon fra I til ParseResult[I, O].
-Denne er ekvivalent med med definisjonen på forrige slide. 
+Denne er ekvivalent med definisjonen på forrige slide. 
 -->
 
 ---
@@ -289,7 +289,7 @@ def parser[O]: String => ParseResult[O] = ???
 Enda mer forenklet og det vi kommer til å bruke i resten av presentasjonen og 
 oppgaveløsningen er at vi tar en input av String og produserer et resultat av 
 en type O.
-Det som er viktig her er at vi kan for enkelhetensskyld på en streng som en collection av karakterer og
+Det som er viktig her er at vi kan for enkelhetensskyld se på en streng som en collection av karakterer og
 det er det vi håndterer.
 
 -->
