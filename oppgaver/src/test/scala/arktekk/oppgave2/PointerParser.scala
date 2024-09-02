@@ -3,6 +3,7 @@ package arktekk.oppgave2
 import cats.data.NonEmptyList
 import cats.parse.*
 
+// implementer ABNF fra RFC6901
 object PointerParser {
   val unescaped = Parser.charIn(0x00.toChar to 0x2e.toChar) | Parser.charIn(0x30.toChar to 0x7d.toChar) | Parser.charIn(
     0x7f.toChar to 0x10ffff.toChar
@@ -30,6 +31,10 @@ object PointerParser {
     else Path.Refs(NonEmptyList.fromListUnsafe(list ++ maybeEnd.toList))
   }
 
+  // json-pointer    = *( "/" reference-token )
+  // reference-token = *( unescaped / escaped )
+  // unescaped       = %x00-2E / %x30-7D / %x7F-10FFFF ; %x2F ('/') and %x7E ('~') are excluded from 'unescaped'
+  // escaped         = "~" ( "0" / "1" ) ; representing '~' and '/', respectively
   val parser: Parser0[Path] =
     root | refs
 

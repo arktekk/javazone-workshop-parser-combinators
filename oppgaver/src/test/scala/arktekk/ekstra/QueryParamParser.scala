@@ -1,10 +1,12 @@
-package arktekk.oppgave2
+package arktekk.ekstra
 
 import cats.parse.Parser.*
 import cats.parse.{Parser, Parser0}
 
 import scala.collection.immutable.{ListMap, Seq}
 
+// Implementer den mest vanlige tolkningen av HTTP query params
+// https: //url.spec.whatwg.org/#urlencoded-parsing
 object QueryParamParser {
 
   private def rep0sep0[A](data: Parser0[A], separator: Parser[Any]): Parser0[List[A]] =
@@ -31,6 +33,7 @@ object QueryParamParser {
   val paramOrToken: Parser0[(QueryParams.Encoded, Option[QueryParams.Encoded])] =
     query_param.backtrack | query_token
 
+  // ? *(key=value)
   val queryParams1: Parser[QueryParams] =
     for {
       _      <- char('?')
