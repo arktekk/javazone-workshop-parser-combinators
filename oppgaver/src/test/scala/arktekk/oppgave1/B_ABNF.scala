@@ -41,7 +41,7 @@ class B_ABNF extends ParserSuite {
     assertParsesValid(p, validInputs)
   }
 
-  test("(a b) / (c d)") {
+  test("(a / b) ~ (c / d)") {
     val validInputs = List("ac", "ad", "bc", "bd")
 
     val p = (a | b) ~ (c | d)
