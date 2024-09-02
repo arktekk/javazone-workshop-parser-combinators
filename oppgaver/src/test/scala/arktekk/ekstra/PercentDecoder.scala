@@ -1,4 +1,4 @@
-package arktekk.oppgave2
+package arktekk.ekstra
 
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets.UTF_8

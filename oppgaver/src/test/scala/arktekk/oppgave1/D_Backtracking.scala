@@ -4,6 +4,7 @@ import arktekk.ParserSuite
 import cats.parse.Parser
 
 class D_Backtracking extends ParserSuite {
+  // .withContext kan være fint når man debugger
 
   test("heltall eller flyttall") {
     enum Tall {

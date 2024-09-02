@@ -1,4 +1,4 @@
-package arktekk.oppgave2
+package arktekk.ekstra
 
 import arktekk.ParserSuite
 

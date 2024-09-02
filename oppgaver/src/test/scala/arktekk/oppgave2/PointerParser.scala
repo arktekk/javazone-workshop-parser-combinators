@@ -1,7 +1,9 @@
 package arktekk.oppgave2
 
+import cats.data.NonEmptyList
 import cats.parse.*
 
+// implementer ABNF fra RFC6901
 object PointerParser {
   //       json-pointer    = *( "/" reference-token )
   //      reference-token = *( unescaped / escaped )
