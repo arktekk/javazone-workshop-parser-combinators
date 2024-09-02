@@ -349,7 +349,7 @@ Dette betyr at vi setter sammen parsere som matcher biter av strenger til vi nå
   // forkast output fra min parser og bruk denne. 
   def *>[B](p: Parser[B]): Parser[B] = ???
   
-  // forkastg output fra denne parseren og bruk min
+  // forkast output fra denne parseren og bruk min
   def <*[B](p: Parser[B]): Parser[A] = ???
   
   // parse også dette, og returner resultatet av min og denne i tuppel.
