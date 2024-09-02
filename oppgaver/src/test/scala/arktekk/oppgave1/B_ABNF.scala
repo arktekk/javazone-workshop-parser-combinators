@@ -17,7 +17,7 @@ class B_ABNF extends ParserSuite {
     val validInputs   = List("aba")
     val invalidInputs = List("baaa", "aabbaa")
 
-    val p = a.rep ~ b ~ a.rep
+    val p = a ~ b ~ a
 
     assertParsesValid(p, validInputs)
     assertParsesInvalid(p, invalidInputs)
