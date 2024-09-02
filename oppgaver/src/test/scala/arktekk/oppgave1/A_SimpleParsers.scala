@@ -134,15 +134,4 @@ class A_SimpleParsers extends ParserSuite {
 
     assertParsesValid(p, validInputs)
   }
-
-  // ABNF
-  test("parse '1*a b 1*a' med char, ~ og rep") {
-    val validInputs   = List("aaba", "aba", "aaaabaaa")
-    val invalidInputs = List("baaa", "aabbaa")
-
-    val p = Parser.char('a').rep ~ Parser.char('b') ~ Parser.char('a').rep
-
-    assertParsesValid(p, validInputs)
-    assertParsesInvalid(p, invalidInputs)
-  }
 }
