@@ -286,7 +286,7 @@ def parser[O]: String => ParseResult[O] = ???
 Enda mer forenklet og det vi kommer til å bruke i resten av presentasjonen og 
 oppgaveløsningen er at vi tar en input av String og produserer et resultat av 
 en type O.
-Det som er viktig her er at vi kan for enkelhetensskyld på en streng som en collection av karakterer og
+Det som er viktig her er at vi kan for enkelhetensskyld se på en streng som en collection av karakterer og
 det er det vi håndterer.
 
 -->
