@@ -13,8 +13,9 @@ import cats.parse.Parser
 // false   = %x66.61.6C.73.65  ; false
 //
 object TomlBooleanParser {
+
   case class TomlBoolean(value: String)
 
-  def tomlBoolean: Parser[TomlBoolean] =
-    implement_me
+  // boolean = true / false
+  def tomlBoolean: Parser[TomlBoolean] = implement_me
 }
