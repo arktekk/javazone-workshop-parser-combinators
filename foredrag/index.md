@@ -66,7 +66,7 @@ bruke i dag, så trenger vi å gå litt gjennom basic Scala syntaks.
 // en verdi av typen Int
 val value: Int = 1
 val value = 1
-// sløfyer typen, type inference
+// sløyfer typen, type inference
 
 // metodekall
 println("na" * 10 + " Batman")
