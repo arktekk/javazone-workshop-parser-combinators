@@ -15,6 +15,6 @@ import cats.parse.Parser
 object TomlBooleanParser {
   case class TomlBoolean(value: String)
 
-  val tomlBoolean: Parser[TomlBoolean] =
+  def tomlBoolean: Parser[TomlBoolean] =
     implement_me
 }

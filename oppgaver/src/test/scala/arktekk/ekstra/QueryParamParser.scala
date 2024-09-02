@@ -1,5 +1,6 @@
 package arktekk.ekstra
 
+import arktekk.oppgave2.implement_me
 import cats.parse.Parser.*
 import cats.parse.{Parser, Parser0}
 
