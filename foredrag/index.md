@@ -181,6 +181,7 @@ Men først et sidespor med noen flere definisjoner.
 
 <!--
 Dette er et språk for å formelt beskrive parsere, De finnes i to vanlige former.
+En formelt definert parser blir ofte kalt en grammatik eller grammar på godt norsk.
 -->
 
 ---
@@ -198,7 +199,7 @@ digit                = "0" | digit excluding zero ;
 
 <!--
 Dette er en vanlig måte å beskriver parsere på, spesielt i programminggspråk.
-Det siste oppgavesettet kommer til å bruke dette.
+Vi kommer ikke til å fokusere på denne varianten i denne workshoppen, men (bytt slide)
 -->
 
 
@@ -210,15 +211,17 @@ Det siste oppgavesettet kommer til å bruke dette.
 
 [wikipedia](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
 
+Også tilgjengelig som PDF [her](Augmented_Backus–Naur_form.pdf)
+
+
 ```
 rule = definition / alternate definition ; comment CR LF
 ``` 
 
 <!-- 
-Denne varianten av BNF er den vi skal bruke mest i denne workshoppen.
-Oppgavesett 2, pluss i deler av oppgavesett 1.
-
+Denne varianten av BNF er den vi skal bruke i denne workshoppen.
 For de som er kjent med RFCer så er dette brukt i stort sett alle.
+All gramatikk som er brukt i workshoppen er beskrvet i ABNF.
 --->
 
 ---
