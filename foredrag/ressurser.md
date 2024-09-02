@@ -86,5 +86,15 @@ val b: Parser[B] = ???
 |:---------------------------------------------------:|:-----------------------------------------------------------------------------------------------|:---------|
 |               a.map(f)<br/>f: A => C                | parse `a`, transformer resultatet vha funksjonen f                                             | C        |
 | a.mapFilter(f)<br/>f:&nbsp;A&nbsp;=>&nbsp;Option[C] | parse `a`, transformer resultatet vha funksjonen f. Parseren feiler hvis resultatet er None    | C        |      
-|                      a.repSep                       | 
-- 
+|                      a.repSep                       |
+
+
+---
+
+### Linker
+
+* [Cats-Parse](https://typelevel.org/cats-parse/)
+* [Parsley](https://j-mie6.github.io/parsley/)
+* [Parse Don't validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/)
+* [Intro to parsing](https://jakewheat.github.io/intro_to_parsing/)
+* [Building scala combinator from scratch](https://blog.agilogy.com/2022-11-11-writing-a-parser-combinator-library-1.html)
