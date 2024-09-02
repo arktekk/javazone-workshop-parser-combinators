@@ -149,17 +149,11 @@ class B_ABNF extends ParserSuite {
   // town-name        = 1*(ALPHA / SP)
   // state            = 2ALPHA
   // zip-code         = 5DIGIT ["-" 4DIGIT]
-  test("zip") {
-    val zip_code: Parser[(NonEmptyList[Char], Option[(Unit, NonEmptyList[Char])])] =
-      (Numbers.digit.rep(5, 5) ~ (Parser.char('-') ~ Numbers.digit.rep(4, 4)).?).withContext("zip-code")
-    val state: Parser[NonEmptyList[Char]]       = Rfc5234.alpha.rep(2, 2).withContext("state")
-    val town_name: Parser[NonEmptyList[AnyVal]] = (Rfc5234.alpha | Rfc5234.sp).rep.withContext("town-name")
-    val zip_part: Parser[
-      (
-          ((((NonEmptyList[AnyVal], Unit), Unit), NonEmptyList[Char]), NonEmptyList[Unit]),
-          (NonEmptyList[Char], Option[(Unit, NonEmptyList[Char])])
-      )
-    ] = (town_name ~ Parser.char(',') ~ Rfc5234.sp ~ state ~ Rfc5234.sp.rep(1, 2) ~ zip_code)
+  test("zip-part of address") {
+    val zip_code  = (Numbers.digit.rep(5, 5) ~ (Parser.char('-') ~ Numbers.digit.rep(4, 4)).?).withContext("zip-code")
+    val state     = Rfc5234.alpha.rep(2, 2).withContext("state")
+    val town_name = (Rfc5234.alpha | Rfc5234.sp).rep.withContext("town-name")
+    val zip_part = (town_name ~ Parser.char(',') ~ Rfc5234.sp ~ state ~ Rfc5234.sp.rep(1, 2) ~ zip_code)
       .withContext("zip-part")
 
     val validInputs = List(
